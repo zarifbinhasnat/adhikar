@@ -44,3 +44,6 @@ yarn-error.*
 CLAUDE.md
 AGENTS.md
 .cursorrules
+
+# Python venv
+.venv/
