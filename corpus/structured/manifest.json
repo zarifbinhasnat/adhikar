@@ -1,0 +1,79 @@
+{
+ "constitution_en": {
+  "sections": 167,
+  "source": "wayback:20260921062027",
+  "id": 367,
+  "lang": "en",
+  "name": "The Constitution of the People's Republic of Bangladesh"
+ },
+ "constitution_bn": {
+  "sections": 167,
+  "source": "wayback:20260702174649",
+  "id": 957,
+  "lang": "bn",
+  "name": "গণপ্রজাতন্ত্রী বাংলাদেশের সংবিধান"
+ },
+ "crpc_en": {
+  "sections": 510,
+  "source": "cache",
+  "id": 75,
+  "lang": "en",
+  "name": "The Code of Criminal Procedure, 1898"
+ },
+ "police_act_en": {
+  "sections": 52,
+  "source": "cache",
+  "id": 12,
+  "lang": "en",
+  "name": "The Police Act, 1861"
+ },
+ "evidence_en": {
+  "sections": 182,
+  "source": "cache",
+  "id": 24,
+  "lang": "en",
+  "name": "The Evidence Act, 1872"
+ },
+ "evidence_amend_2022_en": {
+  "sections": 21,
+  "source": "cache",
+  "id": 1416,
+  "lang": "en",
+  "name": "Evidence (Amendment) Act, 2022"
+ },
+ "rti_bn": {
+  "sections": 37,
+  "source": "cache",
+  "id": 1011,
+  "lang": "bn",
+  "name": "তথ্য অধিকার আইন, ২০০৯"
+ },
+ "legal_aid_bn": {
+  "sections": 39,
+  "source": "cache",
+  "id": 834,
+  "lang": "bn",
+  "name": "আইনগত সহায়তা প্রদান আইন, ২০০০"
+ },
+ "ict_bn": {
+  "sections": 85,
+  "source": "cache",
+  "id": 950,
+  "lang": "bn",
+  "name": "তথ্য ও যোগাযোগ প্রযুক্তি আইন, ২০০৬"
+ },
+ "women_children_bn": {
+  "sections": 40,
+  "source": "wayback:20260310161124",
+  "id": 835,
+  "lang": "bn",
+  "name": "নারী ও শিশু নির্যাতন দমন আইন, ২০০০"
+ },
+ "torture_custodial_bn": {
+  "sections": 20,
+  "source": "wayback:20251205234249",
+  "id": 1133,
+  "lang": "bn",
+  "name": "নির্যাতন এবং হেফাজতে মৃত্যু (নিবারণ) আইন, ২০১৩"
+ }
+}
