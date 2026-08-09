@@ -134,15 +134,14 @@ def parse(html: str, key: str, meta: dict, source: str, url: str):
 def run(key: str, live: bool, refresh: bool = False):
     meta = ACTS[key]
     RAW.mkdir(parents=True, exist_ok=True)
-    cached = RAW / f"{key}.html"
+    cached, provenance = RAW / f"{key}.html", RAW / f"{key}.source"
     if cached.exists() and not refresh:
-        html, source, url = cached.read_text(encoding="utf-8"), "cache", ""
-        prev = STRUCT / "manifest.json"
-        if prev.exists():
-            source = json.loads(prev.read_text()).get(key, {}).get("source", "cache")
+        html, url = cached.read_text(encoding="utf-8"), ""
+        source = provenance.read_text().strip() if provenance.exists() else "unknown"
     else:
         html, source, url = fetch(meta["id"], live)
         cached.write_text(html, encoding="utf-8")
+        provenance.write_text(source)
     secs = parse(html, key, meta, source, url)
     STRUCT.mkdir(parents=True, exist_ok=True)
     (STRUCT / f"{key}.json").write_text(json.dumps(secs, ensure_ascii=False, indent=1), encoding="utf-8")
