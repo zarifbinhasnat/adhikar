@@ -47,3 +47,6 @@ AGENTS.md
 
 # Python venv
 .venv/
+
+# Report build output
+docs/report/build/

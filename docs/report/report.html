@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Adhikar Local RAG — Procedure and Design Report</title>
+<style>
+@font-face { font-family: "Source Serif 4"; src: url("{{FONTS}}/source-serif-4/400Regular/SourceSerif4_400Regular.ttf"); font-weight: 400; }
+@font-face { font-family: "Source Serif 4"; src: url("{{FONTS}}/source-serif-4/400Regular_Italic/SourceSerif4_400Regular_Italic.ttf"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Source Serif 4"; src: url("{{FONTS}}/source-serif-4/600SemiBold/SourceSerif4_600SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Source Serif 4"; src: url("{{FONTS}}/source-serif-4/700Bold/SourceSerif4_700Bold.ttf"); font-weight: 700; }
+@font-face { font-family: "Manrope"; src: url("{{FONTS}}/manrope/500Medium/Manrope_500Medium.ttf"); font-weight: 500; }
+@font-face { font-family: "Manrope"; src: url("{{FONTS}}/manrope/600SemiBold/Manrope_600SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Manrope"; src: url("{{FONTS}}/manrope/700Bold/Manrope_700Bold.ttf"); font-weight: 700; }
+@font-face { font-family: "Hind Siliguri"; src: url("{{FONTS}}/hind-siliguri/400Regular/HindSiliguri_400Regular.ttf"); font-weight: 400; }
+@font-face { font-family: "Hind Siliguri"; src: url("{{FONTS}}/hind-siliguri/600SemiBold/HindSiliguri_600SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Hind Siliguri"; src: url("{{FONTS}}/hind-siliguri/700Bold/HindSiliguri_700Bold.ttf"); font-weight: 700; }
+
+:root {
+  --clay: #C96442; --clay7: #9C4126; --clay1: #F5E2D6;
+  --paper: #F5F0E8; --paper50: #FBF8F3; --paper2: #EDE6DA; --line: #E1D8C7;
+  --ink: #1F1B16; --ink7: #3A332A; --ink5: #5C5346; --ink4: #7B7160;
+  --sage: #4A6F5E; --sage1: #DCE8E1; --sage9: #2D4A3E;
+  --ochre: #C99846; --ochre1: #FBF4E3; --ochre9: #6B4A12;
+  --coral: #B85541; --coral1: #F0D8D0;
+}
+@page { size: A4; margin: 20mm 18mm 20mm 18mm;
+  @bottom-left { content: "Adhikar — Local RAG Procedure & Design Report"; font: 500 7.5pt Manrope; color: #9D9484; }
+  @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 500 7.5pt Manrope; color: #9D9484; }
+}
+@page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font: 400 10.4pt/1.58 "Source Serif 4", "Hind Siliguri", Georgia, serif; color: var(--ink); background: #fff; }
+.bn, :lang(bn) { font-family: "Hind Siliguri", sans-serif; }
+h1, h2, h3, h4, .sans { font-family: "Manrope", "Hind Siliguri", sans-serif; }
+h2 { font-size: 17pt; font-weight: 700; margin: 0 0 4mm; padding-top: 2mm; color: var(--ink); letter-spacing: -0.2pt; break-after: avoid; }
+h2 .num { color: var(--clay); margin-right: 3mm; }
+h3 { font-size: 11.5pt; font-weight: 700; margin: 6mm 0 2mm; color: var(--ink7); break-after: avoid; }
+h4 { font-size: 9.5pt; font-weight: 700; margin: 4mm 0 1mm; text-transform: uppercase; letter-spacing: .6pt; color: var(--clay7); break-after: avoid; }
+p { margin: 0 0 3mm; text-align: justify; hyphens: auto; }
+ul, ol { margin: 0 0 3mm; padding-left: 6mm; } li { margin-bottom: 1mm; }
+section.chapter { margin-top: 11mm; }
+section.chapter.newpage { break-before: page; margin-top: 0; }
+code, .mono { font-family: "SF Mono", Menlo, monospace; font-size: 8.6pt; background: var(--paper2); padding: .3mm 1.2mm; border-radius: 1mm; color: var(--ink7); }
+pre { font-family: "SF Mono", Menlo, monospace; font-size: 8pt; line-height: 1.45; background: #201C17; color: #EDE6DA; padding: 4mm 5mm; border-radius: 2.5mm; white-space: pre-wrap; break-inside: avoid; margin: 0 0 4mm; }
+pre .c { color: #9D9484; } pre .k { color: #E8A07F; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 5mm; font-size: 8.8pt; break-inside: auto; }
+th { font: 700 7.6pt Manrope; text-transform: uppercase; letter-spacing: .5pt; color: var(--ink5); text-align: left; padding: 2mm 2.2mm; border-bottom: 1.4pt solid var(--ink); background: var(--paper50); }
+td { padding: 1.8mm 2.2mm; border-bottom: .5pt solid var(--line); vertical-align: top; }
+tr { break-inside: avoid; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; font-family: Manrope; font-weight: 600; }
+.pill { display: inline-block; font: 700 6.8pt Manrope; letter-spacing: .5pt; text-transform: uppercase; padding: .6mm 2mm; border-radius: 10mm; white-space: nowrap; }
+.ok { background: var(--sage1); color: var(--sage9); } .prov { background: var(--ochre1); color: var(--ochre9); border: .4pt solid #E9D2A0; }
+.sup { background: var(--paper2); color: var(--ink5); } .bad { background: var(--coral1); color: #8E3A2C; }
+.lead { font-size: 11.6pt; line-height: 1.55; color: var(--ink7); }
+.callout { border-left: 2.4pt solid var(--clay); background: var(--paper50); padding: 3mm 4.5mm; margin: 3mm 0 5mm; border-radius: 0 2mm 2mm 0; break-inside: avoid; }
+.callout.sage { border-color: var(--sage); } .callout.ochre { border-color: var(--ochre); }
+.callout b.t { font-family: Manrope; font-size: 8.4pt; text-transform: uppercase; letter-spacing: .6pt; display: block; margin-bottom: 1mm; color: var(--clay7); }
+.callout.sage b.t { color: var(--sage9); } .callout.ochre b.t { color: var(--ochre9); }
+.callout p:last-child { margin: 0; }
+figure { margin: 4mm 0 6mm; break-inside: avoid; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { font: 500 8.2pt/1.45 Manrope; color: var(--ink5); margin-top: 2.5mm; }
+figcaption b { color: var(--clay7); }
+.decision { border: .6pt solid var(--line); border-radius: 2.6mm; margin: 0 0 5mm; break-inside: avoid; overflow: hidden; background: #fff; }
+.decision header { display: flex; align-items: center; gap: 3mm; padding: 2.6mm 4mm; background: linear-gradient(90deg, var(--paper50), #fff); border-bottom: .6pt solid var(--line); }
+.decision header .id { font: 700 8pt Manrope; color: #fff; background: var(--clay); border-radius: 1.4mm; padding: .7mm 1.8mm; }
+.decision header .ttl { font: 700 10.4pt Manrope; flex: 1; }
+.decision .body { padding: 2.5mm 4mm 1mm; display: grid; grid-template-columns: 27mm 1fr; column-gap: 4mm; }
+.decision .body dt { font: 700 7.4pt Manrope; text-transform: uppercase; letter-spacing: .5pt; color: var(--ink4); padding-top: .9mm; }
+.decision .body dd { margin: 0 0 2.2mm; font-size: 9.6pt; line-height: 1.5; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.kpi { border: .6pt solid var(--line); border-radius: 2.4mm; padding: 3mm 4mm; background: var(--paper50); }
+.kpi .v { font: 700 18pt Manrope; color: var(--clay); line-height: 1.1; } .kpi .l { font: 600 7.6pt Manrope; color: var(--ink5); text-transform: uppercase; letter-spacing: .5pt; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 4mm 0 6mm; }
+.toc { columns: 1; font-family: Manrope; font-size: 9.6pt; }
+.toc div { display: flex; justify-content: space-between; border-bottom: .5pt dotted var(--line); padding: 1.6mm 0; }
+.toc .s { color: var(--clay); font-weight: 700; width: 9mm; display: inline-block; }
+.quote-bn { font-family: "Hind Siliguri"; font-size: 10.4pt; line-height: 1.7; }
+
+/* Cover */
+.cover { height: 297mm; position: relative; overflow: hidden; background: var(--paper); break-after: page; }
+.cover .band { position: absolute; inset: 0 0 auto 0; height: 118mm; background: radial-gradient(120% 140% at 85% 0%, #D9805F 0%, var(--clay) 38%, var(--clay7) 100%); }
+.cover .pattern { position: absolute; right: -20mm; top: -10mm; opacity: .16; }
+.cover .inner { position: absolute; left: 22mm; right: 22mm; top: 30mm; color: #FBF8F3; }
+.cover .kicker { font: 700 8.5pt Manrope; letter-spacing: 2.2pt; text-transform: uppercase; opacity: .9; }
+.cover h1 { font: 700 34pt/1.08 Manrope; margin: 6mm 0 3mm; letter-spacing: -.8pt; }
+.cover .bn-title { font: 600 19pt "Hind Siliguri"; opacity: .95; }
+.cover .sub { font: 400 12.5pt/1.5 "Source Serif 4"; margin-top: 5mm; max-width: 145mm; opacity: .95; }
+.cover .meta { position: absolute; left: 22mm; right: 22mm; top: 140mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+.cover .meta div { border-top: 1.2pt solid var(--ink); padding-top: 2.5mm; }
+.cover .meta b { display: block; font: 700 7.4pt Manrope; text-transform: uppercase; letter-spacing: .8pt; color: var(--ink5); margin-bottom: 1mm; }
+.cover .meta span { font: 600 10.5pt Manrope; }
+.cover .abstract { position: absolute; left: 22mm; right: 22mm; top: 178mm; font-size: 10.4pt; line-height: 1.6; color: var(--ink7); }
+.cover .abstract h4 { margin-top: 0; }
+.cover .foot { position: absolute; left: 22mm; right: 22mm; bottom: 16mm; font: 500 8pt Manrope; color: var(--ink4); display: flex; justify-content: space-between; border-top: .5pt solid var(--line); padding-top: 3mm; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="band"></div>
+  <svg class="pattern" width="190mm" height="140mm" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#FBF8F3" stroke-width="1.2">
+      <circle cx="300" cy="80" r="40"/><circle cx="300" cy="80" r="80"/><circle cx="300" cy="80" r="120"/><circle cx="300" cy="80" r="160"/><circle cx="300" cy="80" r="200"/><circle cx="300" cy="80" r="240"/>
+    </g>
+    <path d="M300 40 l30 12 v26 c0 22 -14 36 -30 44 c-16 -8 -30 -22 -30 -44 v-26 z" fill="#FBF8F3" opacity=".9"/>
+    <path d="M287 82 l9 9 l18 -20" stroke="#C96442" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="inner">
+    <div class="kicker">Technical Report · Procedure &amp; Design Decisions</div>
+    <h1>Adhikar: a fully local,<br>citation-grounded legal assistant</h1>
+    <div class="bn-title" lang="bn">অধিকার — নিজের যন্ত্রে চলা আইনি সহায়ক</div>
+    <div class="sub">Running a 7–8B-parameter language model with retrieval-augmented generation over Bangladesh statutes on a single MacBook Air, demonstrated live on an iPhone.</div>
+  </div>
+  <div class="meta">
+    <div><b>Status</b><span>{{STATUS}}</span></div>
+    <div><b>Revision date</b><span>{{DATE}}</span></div>
+    <div><b>Repository revision</b><span class="mono" style="background:none;padding:0;font-size:10pt">{{HEAD}}</span></div>
+  </div>
+  <div class="abstract">
+    <h4>Abstract</h4>
+    <p>This report documents, step by step, how the Adhikar legal-information app is being extended with a question-answering system that runs entirely on the presenter's laptop. No question, document or answer leaves the machine. For every engineering step we record what was done, which alternatives were considered, the decision taken and the reasoning behind it, and the risks that remain. The report is a living document. It is regenerated from the repository as work progresses, and decisions still awaiting measurement are marked <span class="pill prov">Provisional</span> until benchmark evidence settles them.</p>
+  </div>
+  <div class="foot"><span>Prepared for the Adhikar project presentation</span><span>Legal information, not legal advice</span></div>
+</div>
+
+<!-- ============================== CONTENTS ============================== -->
+<section>
+  <h2>Contents</h2>
+  <div class="toc">
+    <div><span><span class="s">1</span>Executive summary</span></div>
+    <div><span><span class="s">2</span>Objectives, constraints and scope</span></div>
+    <div><span><span class="s">3</span>Starting-point audit</span></div>
+    <div><span><span class="s">4</span>System architecture</span></div>
+    <div><span><span class="s">5</span>Decision record</span></div>
+    <div><span><span class="s">6</span>Knowledge-base construction procedure</span></div>
+    <div><span><span class="s">7</span>Retrieval and answer-generation pipeline</span></div>
+    <div><span><span class="s">8</span>Corpus review method</span></div>
+    <div><span><span class="s">9</span>Evaluation plan</span></div>
+    <div><span><span class="s">10</span>Demonstration setup</span></div>
+    <div><span><span class="s">11</span>Schedule</span></div>
+    <div><span><span class="s">12</span>Risks and open issues</span></div>
+    <div><span><span class="s">A</span>Procedure log and reproduction commands</span></div>
+    <div><span><span class="s">B</span>Version-control history</span></div>
+  </div>
+
+  <h2 style="margin-top:9mm"><span class="num">1</span>Executive summary</h2>
+  <p class="lead">Adhikar helps people in Bangladesh understand their legal rights, particularly in encounters with the police. This work adds a question-answering feature. A user asks a question in Bangla, English or romanised Bangla ("Banglish") and receives an answer that quotes and cites the exact provision of Bangladeshi law it relies on.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">{{N_ACTS}}</div><div class="l">Acts in corpus</div></div>
+    <div class="kpi"><div class="v">{{N_SECTIONS}}</div><div class="l">Sections parsed</div></div>
+    <div class="kpi"><div class="v">0</div><div class="l">Cloud services used</div></div>
+    <div class="kpi"><div class="v">16&nbsp;GB</div><div class="l">Total RAM budget</div></div>
+  </div>
+  <p>Three decisions define the work:</p>
+  <ol>
+    <li><b>All inference is local.</b> The language model, the embedding model and the search index run on an Apple M4 MacBook Air with 16 GB of unified memory. The iPhone is only a display and input device, and it reaches the laptop over a private Wi-Fi link. This replaces the cloud design in the earlier <code>RAG_ARCHITECTURE.md</code> (see D1).</li>
+    <li><b>Answers are grounded, not generated from memory.</b> A 7–8B model does not reliably know Bangladeshi law. It is used only to <i>explain</i> provisions that the retrieval system has found, and every answer shows the statutory text verbatim beneath it (see D14).</li>
+    <li><b>The corpus is treated as the critical asset.</b> The earlier ingestion script had never produced output: four of its six act identifiers pointed at unrelated laws, and its URL pattern did not exist. The corpus was rebuilt from verified identifiers. Because the official site was offline, it was fetched from Wayback Machine snapshots, with the source of every section recorded (see D9–D12).</li>
+  </ol>
+  <div class="callout ochre"><b class="t">Current state — {{DATE}}</b><p>{{STATE_SUMMARY}}</p></div>
+</section>
+
+<!-- ============================== 2 ============================== -->
+<section class="chapter">
+  <h2><span class="num">2</span>Objectives, constraints and scope</h2>
+  <h3>2.1 Objectives</h3>
+  <ol>
+    <li>Answer rights-related questions in Bangla, English and Banglish, with a citation to the governing Act and section for every legal claim.</li>
+    <li>Run every model on the presenter's MacBook so that the privacy claim ("your question never leaves this machine") is literally true during the demonstration.</li>
+    <li>Demonstrate the system live from an iPhone, including what it does <i>not</i> do: refusing to give personal legal advice, and redirecting emergencies to 999 and the national legal-aid hotline 16430.</li>
+  </ol>
+  <h3>2.2 Constraints</h3>
+  <table>
+    <tr><th style="width:28%">Constraint</th><th>Value</th><th style="width:40%">Consequence for design</th></tr>
+    <tr><td>Hardware</td><td>Apple M4, 16 GB unified memory, fanless; 239 GB free disk</td><td>A model of about 8B parameters at 4-bit quantisation is the practical upper bound once macOS, the embedding model and development servers are resident. Sustained load causes thermal throttling.</td></tr>
+    <tr><td>Time</td><td>Five days to presentation</td><td>Scope is limited to P0 legal topics. Optional components (reranker, voice input, second model) are gated on measured need.</td></tr>
+    <tr><td>Human review capacity</td><td>None available. Review is performed by the AI assistant.</td><td>Review must be systematic and checkable (Section 8), and the product must state clearly that it provides legal information, not legal advice.</td></tr>
+    <tr><td>Network</td><td>Official law site <span class="mono">bdlaws.minlaw.gov.bd</span> unreachable</td><td>The corpus is sourced from Internet Archive snapshots, with per-section provenance.</td></tr>
+    <tr><td>Tooling</td><td>Xcode not installed (command-line tools only)</td><td>The iOS Simulator is unavailable. The demonstration uses a physical iPhone running Expo Go.</td></tr>
+  </table>
+  <h3>2.3 Out of scope for this iteration</h3>
+  <p>Fine-tuning; on-phone inference; voice input; acts outside the P0/P1 list in Section 6; production deployment, authentication and multi-user concerns.</p>
+
+  <!-- ============================== 3 ============================== -->
+  <h2 style="margin-top:8mm"><span class="num">3</span>Starting-point audit</h2>
+  <p>Before any design work, the repository and the machine were inspected to separate what exists from what earlier documents claim. The findings changed the plan materially.</p>
+  <table>
+    <tr><th style="width:30%">Item</th><th>Claimed in earlier documents</th><th>Observed</th></tr>
+    <tr><td>Ingestion pipeline</td><td><span class="pill ok">Ready</span> "~1200 sections across 6 acts in 30 seconds"</td><td><span class="pill bad">Never ran</span> No output directory existed. The URL pattern <code>/act-detail/type/law/id/N</code> does not exist on bdlaws, and 4 of 6 act IDs were wrong (Table 6.1).</td></tr>
+    <tr><td>Backend</td><td>Supabase schema, Edge Function, Voyage embeddings, Claude API</td><td>Templates only, never deployed; all cloud-dependent. Superseded by D1.</td></tr>
+    <tr><td>App</td><td>Expo SDK 54 / React Native 0.81, bilingual UI</td><td>Runs on web (verified in browser, mobile viewport). Expo reports four dependency-version mismatches (risk R6).</td></tr>
+    <tr><td>Local AI tooling</td><td>—</td><td>No Ollama, no models. Homebrew, Python and Node available.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 4 ============================== -->
+<section class="chapter">
+  <h2><span class="num">4</span>System architecture</h2>
+  <p>The system has three tiers. All of them run on hardware the presenter carries into the room, and no tier communicates with the Internet at question time.</p>
+  <figure>
+  <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" font-family="Manrope, sans-serif">
+    <defs>
+      <linearGradient id="mac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F5F0E8"/></linearGradient>
+      <linearGradient id="clayg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9805F"/><stop offset="1" stop-color="#9C4126"/></linearGradient>
+      <linearGradient id="sageg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6E9583"/><stop offset="1" stop-color="#2D4A3E"/></linearGradient>
+      <linearGradient id="inkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A332A"/><stop offset="1" stop-color="#1F1B16"/></linearGradient>
+      <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#3A332A" flood-opacity=".14"/></filter>
+      <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9C4126"/></marker>
+      <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#4A6F5E"/></marker>
+    </defs>
+    <!-- iPhone -->
+    <g filter="url(#sh)">
+      <rect x="22" y="96" width="176" height="352" rx="30" fill="url(#inkg)"/>
+      <rect x="31" y="105" width="158" height="334" rx="23" fill="#F5F0E8"/>
+      <rect x="84" y="113" width="52" height="15" rx="7.5" fill="#1F1B16"/>
+    </g>
+    <text x="110" y="152" text-anchor="middle" font-size="12" font-weight="700" fill="#1F1B16">Ask Adhikar</text>
+    <rect x="42" y="164" width="136" height="44" rx="10" fill="#C96442"/>
+    <text x="52" y="183" font-size="9.5" fill="#FBF8F3" font-family="Hind Siliguri">পুলিশ কি ওয়ারেন্ট ছাড়া</text>
+    <text x="52" y="198" font-size="9.5" fill="#FBF8F3" font-family="Hind Siliguri">গ্রেফতার করতে পারে?</text>
+    <rect x="42" y="218" width="136" height="98" rx="10" fill="#FBF8F3" stroke="#E1D8C7"/>
+    <rect x="52" y="230" width="108" height="6" rx="3" fill="#3A332A" opacity=".75"/>
+    <rect x="52" y="243" width="116" height="6" rx="3" fill="#3A332A" opacity=".45"/>
+    <rect x="52" y="256" width="94" height="6" rx="3" fill="#3A332A" opacity=".45"/>
+    <rect x="52" y="274" width="58" height="16" rx="8" fill="#F5E2D6"/><text x="81" y="285.5" text-anchor="middle" font-size="7.5" font-weight="700" fill="#9C4126">CrPC §54</text>
+    <rect x="114" y="274" width="54" height="16" rx="8" fill="#F5E2D6"/><text x="141" y="285.5" text-anchor="middle" font-size="7.5" font-weight="700" fill="#9C4126">Const. 33</text>
+    <rect x="52" y="296" width="80" height="12" rx="6" fill="#DCE8E1"/><text x="92" y="305" text-anchor="middle" font-size="6.8" font-weight="700" fill="#2D4A3E">VERBATIM TEXT ▾</text>
+    <rect x="42" y="326" width="136" height="30" rx="9" fill="#F0D8D0"/><text x="110" y="345" text-anchor="middle" font-size="8.5" font-weight="700" fill="#8E3A2C">Emergency 999 · Legal aid 16430</text>
+    <text x="110" y="472" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F1B16">iPhone</text>
+    <text x="110" y="489" text-anchor="middle" font-size="10" fill="#5C5346">Expo Go · display &amp; input only</text>
+
+    <!-- link -->
+    <path d="M206 262 C 250 262, 250 262, 290 262" stroke="#C99846" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)" marker-start="url(#ar)"/>
+    <g transform="translate(248 226)">
+      <path d="M-14 0 a20 20 0 0 1 28 0" stroke="#C99846" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M-8 6 a11 11 0 0 1 16 0" stroke="#C99846" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="0" cy="12" r="2.6" fill="#C99846"/>
+    </g>
+    <text x="248" y="290" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6B4A12">Personal</text>
+    <text x="248" y="303" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6B4A12">Hotspot</text>
+    <text x="248" y="318" text-anchor="middle" font-size="8.5" fill="#7B7160">private LAN</text>
+
+    <!-- Mac container -->
+    <g filter="url(#sh)"><rect x="296" y="40" width="680" height="476" rx="22" fill="url(#mac)" stroke="#E1D8C7" stroke-width="1.5"/></g>
+    <rect x="296" y="40" width="680" height="46" rx="22" fill="url(#clayg)"/>
+    <rect x="296" y="66" width="680" height="20" fill="url(#clayg)"/>
+    <circle cx="322" cy="63" r="5" fill="#FBF8F3" opacity=".55"/><circle cx="340" cy="63" r="5" fill="#FBF8F3" opacity=".55"/><circle cx="358" cy="63" r="5" fill="#FBF8F3" opacity=".55"/>
+    <text x="378" y="68" font-size="15" font-weight="700" fill="#FBF8F3">MacBook Air · Apple M4 · 16 GB unified memory</text>
+    <text x="956" y="68" text-anchor="end" font-size="10.5" font-weight="600" fill="#FBF8F3" opacity=".92">all inference on-device</text>
+
+    <!-- Metro -->
+    <g filter="url(#sh)"><rect x="322" y="108" width="190" height="78" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <rect x="322" y="108" width="6" height="78" rx="3" fill="#C99846"/>
+    <text x="340" y="134" font-size="12.5" font-weight="700" fill="#1F1B16">Expo / Metro</text>
+    <text x="340" y="152" font-size="10" fill="#5C5346">serves the app bundle</text>
+    <text x="340" y="170" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">:8081</text>
+
+    <!-- FastAPI -->
+    <g filter="url(#sh)"><rect x="322" y="214" width="190" height="112" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <rect x="322" y="214" width="6" height="112" rx="3" fill="#C96442"/>
+    <text x="340" y="240" font-size="12.5" font-weight="700" fill="#1F1B16">Adhikar API</text>
+    <text x="340" y="258" font-size="10" fill="#5C5346">FastAPI · POST /ask</text>
+    <text x="340" y="275" font-size="10" fill="#5C5346">guardrails · citation check</text>
+    <text x="340" y="292" font-size="10" fill="#5C5346">streams tokens (SSE)</text>
+    <text x="340" y="312" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">:8000</text>
+
+    <!-- Retrieval -->
+    <g filter="url(#sh)"><rect x="548" y="214" width="196" height="112" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <rect x="548" y="214" width="6" height="112" rx="3" fill="#4A6F5E"/>
+    <text x="566" y="240" font-size="12.5" font-weight="700" fill="#1F1B16">Hybrid retrieval</text>
+    <text x="566" y="258" font-size="10" fill="#5C5346">BM25 keywords</text>
+    <text x="566" y="275" font-size="10" fill="#5C5346">+ dense vectors (in memory)</text>
+    <text x="566" y="292" font-size="10" fill="#5C5346">→ reciprocal rank fusion</text>
+    <text x="566" y="312" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">numpy · rank_bm25</text>
+
+    <!-- Ollama -->
+    <g filter="url(#sh)"><rect x="780" y="108" width="172" height="218" rx="14" fill="url(#inkg)"/></g>
+    <text x="866" y="134" text-anchor="middle" font-size="13" font-weight="700" fill="#FBF8F3">Ollama</text>
+    <text x="866" y="150" text-anchor="middle" font-size="9.5" font-family="Menlo, monospace" fill="#9D9484">:11434 · Metal GPU</text>
+    <rect x="794" y="164" width="144" height="70" rx="11" fill="url(#clayg)"/>
+    <text x="866" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#FBF8F3">Qwen3-8B</text>
+    <text x="866" y="204" text-anchor="middle" font-size="9.5" fill="#FBF8F3" opacity=".9">generation · Q4_K_M</text>
+    <text x="866" y="220" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".8">≈ 5.2 GB</text>
+    <rect x="794" y="244" width="144" height="70" rx="11" fill="url(#sageg)"/>
+    <text x="866" y="268" text-anchor="middle" font-size="12" font-weight="700" fill="#FBF8F3">BGE-M3</text>
+    <text x="866" y="284" text-anchor="middle" font-size="9.5" fill="#FBF8F3" opacity=".9">multilingual embeddings</text>
+    <text x="866" y="300" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".8">≈ 1.2 GB</text>
+
+    <!-- Corpus -->
+    <g filter="url(#sh)">
+      <path d="M548 372 h196 v80 a98 14 0 0 1 -196 0 z" fill="#FBF8F3" stroke="#E1D8C7"/>
+      <ellipse cx="646" cy="372" rx="98" ry="14" fill="#EDE6DA" stroke="#E1D8C7"/>
+    </g>
+    <text x="646" y="406" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F1B16">Statute corpus</text>
+    <text x="646" y="424" text-anchor="middle" font-size="10" fill="#5C5346">{{N_SECTIONS}} sections · {{N_ACTS}} acts</text>
+    <text x="646" y="441" text-anchor="middle" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">corpus/structured/*.json</text>
+
+    <!-- arrows -->
+    <path d="M512 270 H 540" stroke="#9C4126" stroke-width="2.2" fill="none" marker-end="url(#ar)"/>
+    <path d="M744 252 C 762 252, 762 270, 776 270" stroke="#4A6F5E" stroke-width="2.2" fill="none" marker-end="url(#arg)"/>
+    <path d="M646 326 V 352" stroke="#4A6F5E" stroke-width="2.2" fill="none" marker-end="url(#arg)"/>
+    <path d="M440 326 C 440 470, 740 500, 866 500 C 900 500, 900 420, 900 330" stroke="#9C4126" stroke-width="2.2" fill="none" marker-end="url(#ar)"/>
+    <path d="M296 150 H 318" stroke="#C99846" stroke-width="2.2" fill="none" marker-end="url(#ar)"/>
+    <path d="M296 270 H 318" stroke="#9C4126" stroke-width="2.2" fill="none" marker-end="url(#ar)"/>
+
+    <g font-size="10" font-weight="700" fill="#FBF8F3">
+      <circle cx="304" cy="232" r="10" fill="#C96442"/><text x="304" y="235.5" text-anchor="middle">1</text>
+      <circle cx="527" cy="250" r="10" fill="#C96442"/><text x="527" y="253.5" text-anchor="middle">2</text>
+      <circle cx="764" cy="236" r="10" fill="#4A6F5E"/><text x="764" y="239.5" text-anchor="middle">3</text>
+      <circle cx="626" cy="340" r="10" fill="#4A6F5E"/><text x="626" y="343.5" text-anchor="middle">4</text>
+      <circle cx="640" cy="490" r="10" fill="#C96442"/><text x="640" y="493.5" text-anchor="middle">5</text>
+    </g>
+
+    <!-- no cloud badge -->
+    <g transform="translate(860 18)">
+      <rect x="-6" y="-6" width="128" height="34" rx="17" fill="#FBF8F3" stroke="#B85541" stroke-width="1.5"/>
+      <path d="M14 18 a8 8 0 0 1 2 -15 a10 10 0 0 1 19 3 a7 7 0 0 1 -1 12 z" fill="none" stroke="#B85541" stroke-width="2"/>
+      <path d="M8 22 L40 -2" stroke="#B85541" stroke-width="2.4" stroke-linecap="round"/>
+      <text x="50" y="16" font-size="11" font-weight="700" fill="#8E3A2C">No cloud</text>
+    </g>
+  </svg>
+  <figcaption><b>Figure 1. Deployment architecture.</b> (1) The iPhone sends the question over a private hotspot link to the Adhikar API. (2) The API runs hybrid retrieval over the in-memory index. (3) The query is embedded by BGE-M3 in Ollama. (4) Matching statute sections are loaded from the local corpus. (5) Qwen3-8B, also served by Ollama, writes the answer only from those sections, and the answer streams back to the phone.</figcaption>
+  </figure>
+
+  <h3>4.1 Component responsibilities</h3>
+  <table>
+    <tr><th style="width:22%">Component</th><th>Responsibility</th><th style="width:24%">Technology</th></tr>
+    <tr><td>Mobile client</td><td>Question input; streaming answer display; citation chips that expand into the verbatim statutory text; persistent emergency and legal-aid contacts.</td><td>Expo SDK 54, React Native 0.81, Expo Go</td></tr>
+    <tr><td>Adhikar API</td><td>Safety pre-check, query normalisation, retrieval orchestration, prompt assembly, citation validation and streaming. It is the only component the phone talks to besides Metro.</td><td>Python, FastAPI, Uvicorn</td></tr>
+    <tr><td>Retrieval index</td><td>Keyword (BM25) and semantic (vector) search over statute sections, fused by reciprocal rank.</td><td>numpy, rank_bm25</td></tr>
+    <tr><td>Model server</td><td>Hosts the generation and embedding models on the Apple GPU through Metal; keeps models resident in memory between requests.</td><td>Ollama 0.40 (global install)</td></tr>
+    <tr><td>Corpus</td><td>Section-level, provenance-stamped statute text with amendment notes.</td><td>JSON files in the repository</td></tr>
+  </table>
+
+  <figure>
+  <svg viewBox="0 0 1000 170" xmlns="http://www.w3.org/2000/svg" font-family="Manrope, sans-serif">
+    <defs><filter id="sh2"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3A332A" flood-opacity=".12"/></filter></defs>
+    <text x="0" y="16" font-size="12.5" font-weight="700" fill="#1F1B16">Estimated unified-memory budget (16 GB)</text>
+    <g filter="url(#sh2)">
+      <rect x="0" y="34" width="1000" height="58" rx="12" fill="#EDE6DA"/>
+      <rect x="0" y="34" width="312" height="58" rx="12" fill="#7B7160"/><rect x="290" y="34" width="22" height="58" fill="#7B7160"/>
+      <rect x="312" y="34" width="325" height="58" fill="#C96442"/>
+      <rect x="637" y="34" width="38" height="58" fill="#E8A07F"/>
+      <rect x="675" y="34" width="75" height="58" fill="#4A6F5E"/>
+      <rect x="750" y="34" width="31" height="58" fill="#A8C0B5"/>
+      <rect x="781" y="34" width="50" height="58" fill="#C99846"/>
+    </g>
+    <g font-size="11" font-weight="700" fill="#FBF8F3">
+      <text x="156" y="68" text-anchor="middle">macOS + apps ≈ 5.0</text>
+      <text x="474" y="68" text-anchor="middle">Qwen3-8B Q4_K_M ≈ 5.2</text>
+      <text x="712" y="68" text-anchor="middle">BGE-M3 1.2</text>
+      <text x="806" y="68" text-anchor="middle" fill="#1F1B16">Metro</text>
+      <text x="915" y="68" text-anchor="middle" fill="#5C5346">headroom ≈ 2.7</text>
+    </g>
+    <g font-size="9.5" fill="#5C5346">
+      <path d="M656 96 v14" stroke="#9C4126" stroke-width="1.2"/><text x="656" y="124" text-anchor="middle">KV cache 8k ctx, q8 ≈ 0.6</text>
+      <path d="M765 96 v30" stroke="#4A6F5E" stroke-width="1.2"/><text x="765" y="140" text-anchor="middle">API + index ≈ 0.5</text>
+      <path d="M806 96 v48" stroke="#C99846" stroke-width="1.2"/><text x="806" y="158" text-anchor="middle">Expo/Metro ≈ 0.8</text>
+    </g>
+  </svg>
+  <figcaption><b>Figure 2. Memory budget.</b> Values are planning estimates in GB and will be replaced with measured resident sizes after the Day-1 benchmark. Keeping roughly 2–3 GB of headroom prevents macOS from compressing or swapping model weights during the demonstration, which would cause multi-second stalls.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================== 5 ============================== -->
+<section class="chapter newpage">
+  <h2><span class="num">5</span>Decision record</h2>
+  <p>Each decision below follows the same structure: the <b>context</b> that forced a choice, the <b>options</b> considered, the <b>decision</b>, the <b>rationale</b>, and the <b>consequences</b> we accept. Status labels: <span class="pill ok">Adopted</span> in force; <span class="pill prov">Provisional</span> adopted pending measurement; <span class="pill sup">Superseded</span> replaced by a later decision.</p>
+
+  {{DECISIONS}}
+</section>
+
+<!-- ============================== 6 ============================== -->
+<section class="chapter">
+  <h2><span class="num">6</span>Knowledge-base construction procedure</h2>
+  <p>The answer quality of a retrieval-augmented system cannot exceed the quality of its corpus. A missing section cannot be retrieved, and a wrong section will be cited with confidence. The corpus was therefore built and verified before any retrieval code was written.</p>
+  <figure>
+  <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" font-family="Manrope, sans-serif">
+    <defs>
+      <filter id="sh3"><feDropShadow dx="0" dy="2.5" stdDeviation="3.5" flood-color="#3A332A" flood-opacity=".13"/></filter>
+      <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7B7160"/></marker>
+      <linearGradient id="g3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F5E2D6"/><stop offset="1" stop-color="#FBF8F3"/></linearGradient>
+    </defs>
+    <!-- source row -->
+    <g filter="url(#sh3)">
+      <rect x="0" y="20" width="200" height="86" rx="14" fill="#FFFFFF" stroke="#B85541" stroke-width="1.5" stroke-dasharray="5 4"/>
+    </g>
+    <text x="100" y="48" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">bdlaws.minlaw.gov.bd</text>
+    <text x="100" y="66" text-anchor="middle" font-size="9.5" fill="#5C5346">official law database</text>
+    <rect x="52" y="76" width="96" height="18" rx="9" fill="#F0D8D0"/><text x="100" y="89" text-anchor="middle" font-size="8.5" font-weight="700" fill="#8E3A2C">UNREACHABLE</text>
+    <path d="M200 63 H 246" stroke="#7B7160" stroke-width="2" stroke-dasharray="4 4" fill="none" marker-end="url(#a3)"/>
+    <text x="223" y="54" text-anchor="middle" font-size="8.5" fill="#7B7160">fallback</text>
+    <g filter="url(#sh3)"><rect x="250" y="20" width="200" height="86" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="350" y="48" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Wayback Machine</text>
+    <text x="350" y="66" text-anchor="middle" font-size="9.5" fill="#5C5346">raw snapshots (id_ mode)</text>
+    <text x="350" y="86" text-anchor="middle" font-size="9" font-family="Menlo, monospace" fill="#7B7160">Dec 2025 – Sep 2026</text>
+    <path d="M450 63 H 496" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <g filter="url(#sh3)"><rect x="500" y="20" width="220" height="86" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="610" y="48" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Decode</text>
+    <text x="610" y="66" text-anchor="middle" font-size="9.5" fill="#5C5346">gzip → UTF-16 / UTF-8 detection</text>
+    <text x="610" y="86" text-anchor="middle" font-size="9" font-family="Menlo, monospace" fill="#7B7160">corpus/raw/*.html + .source</text>
+    <path d="M720 63 H 766" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <g filter="url(#sh3)"><rect x="770" y="20" width="230" height="86" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="885" y="48" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Parse rows</text>
+    <text x="885" y="66" text-anchor="middle" font-size="9.5" fill="#5C5346">part · title · text per row</text>
+    <text x="885" y="86" text-anchor="middle" font-size="9" font-family="Menlo, monospace" fill="#7B7160">div.row.lineremoves</text>
+    <!-- down -->
+    <path d="M885 106 V 150 H 846" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <!-- second row R->L -->
+    <g filter="url(#sh3)"><rect x="616" y="128" width="226" height="98" rx="14" fill="url(#g3)" stroke="#E1D8C7"/></g>
+    <text x="729" y="152" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Section assembly</text>
+    <text x="729" y="170" text-anchor="middle" font-size="9.5" fill="#5C5346">label: [০-৯0-9]+ then . । ৷</text>
+    <text x="729" y="186" text-anchor="middle" font-size="9.5" fill="#5C5346">un-numbered rows → previous section</text>
+    <text x="729" y="202" text-anchor="middle" font-size="9.5" fill="#5C5346">footnotes → amendments[]</text>
+    <path d="M616 177 H 570" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <g filter="url(#sh3)"><rect x="350" y="128" width="216" height="98" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="458" y="152" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Structured corpus</text>
+    <text x="458" y="172" text-anchor="middle" font-size="9.5" fill="#5C5346">{{N_SECTIONS}} sections, {{N_ACTS}} acts</text>
+    <text x="458" y="190" text-anchor="middle" font-size="9.5" fill="#5C5346">id · act · part · label · title · text</text>
+    <text x="458" y="208" text-anchor="middle" font-size="9" font-family="Menlo, monospace" fill="#7B7160">corpus/structured/*.json</text>
+    <path d="M350 177 H 304" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <g filter="url(#sh3)"><rect x="104" y="128" width="196" height="98" rx="14" fill="#FBF4E3" stroke="#C99846" stroke-width="1.5"/></g>
+    <text x="202" y="154" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6B4A12">Review gate</text>
+    <text x="202" y="174" text-anchor="middle" font-size="9.5" fill="#6B4A12">counts · EN↔BN parity</text>
+    <text x="202" y="190" text-anchor="middle" font-size="9.5" fill="#6B4A12">key-section spot checks</text>
+    <text x="202" y="206" text-anchor="middle" font-size="9.5" fill="#6B4A12">repeal / amendment status</text>
+    <path d="M104 177 H 70 V 246 H 104" stroke="#7B7160" stroke-width="2" fill="none" marker-end="url(#a3)"/>
+    <g filter="url(#sh3)"><rect x="108" y="234" width="400" height="50" rx="14" fill="#2D4A3E"/></g>
+    <text x="308" y="257" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FBF8F3">Chunk + contextual header → BGE-M3 → index</text>
+    <text x="308" y="274" text-anchor="middle" font-size="9" fill="#DCE8E1">"[Act › Part › Section — Title]" prepended before embedding</text>
+    <g transform="translate(560 244)">
+      <rect width="400" height="40" rx="10" fill="#FBF8F3" stroke="#E1D8C7"/>
+      <text x="16" y="18" font-size="9.5" font-weight="700" fill="#9C4126">Provenance is preserved end-to-end</text>
+      <text x="16" y="32" font-size="9" fill="#5C5346">every section carries source_url, snapshot timestamp and fetch date</text>
+    </g>
+  </svg>
+  <figcaption><b>Figure 3. Corpus ingestion pipeline</b>, as implemented in <code>scripts/ingest_bdlaws.py</code>. The dashed border marks the official source, which was unreachable during this work. The ochre box is the review gate described in Section 8.</figcaption>
+  </figure>
+
+  <h3>6.1 Correction of act identifiers</h3>
+  <p>Each identifier in the earlier script was checked by downloading the page and reading its title. Correct identifiers were then taken from the site's own alphabetical index of 5,145 acts.</p>
+  <table>
+    <tr><th>Intended act</th><th>Old ID</th><th>What the old ID actually is</th><th>Correct ID</th></tr>
+    <tr><td>Constitution of Bangladesh</td><td class="n">367</td><td><span class="pill ok">correct</span></td><td class="n">367 (EN), 957 (BN)</td></tr>
+    <tr><td>Code of Criminal Procedure, 1898</td><td class="n">75</td><td><span class="pill ok">correct</span></td><td class="n">75</td></tr>
+    <tr><td>Evidence Act, 1872</td><td class="n">40</td><td><span class="pill bad">wrong</span> The Touts Act, 1879</td><td class="n">24</td></tr>
+    <tr><td>ICT Act, 2006</td><td class="n">273</td><td><span class="pill bad">wrong</span> Film Development Corporation Act, 1957</td><td class="n">950</td></tr>
+    <tr><td>Police Act, 1861</td><td class="n">61</td><td><span class="pill bad">wrong</span> Private Fisheries Protection Act, 1889</td><td class="n">12</td></tr>
+    <tr><td>Right to Information Act, 2009</td><td class="n">1011</td><td><span class="pill ok">correct</span> (Bangla text)</td><td class="n">1011</td></tr>
+  </table>
+
+  <h3>6.2 Corpus inventory</h3>
+  <table>
+    <tr><th>Act</th><th>ID</th><th>Lang.</th><th>Sections</th><th>Source snapshot</th><th style="width:30%">Notes</th></tr>
+    {{CORPUS_ROWS}}
+  </table>
+
+  <h3>6.3 Legal currency findings</h3>
+  <p>Reading the index showed that several laws named in the earlier plan have changed. A system that cited them as written would give users outdated law.</p>
+  <ul>
+    <li><b>Cyber Security Act, 2023 is repealed.</b> It was replaced, through ordinances in 2025, by the <span class="bn">সাইবার সুরক্ষা আইন, ২০২৬</span> (Cyber Protection Act, 2026). Only the 2026 Act is in scope.</li>
+    <li><b>The Code of Criminal Procedure was amended in 2026</b> (Act No. XI of 2026, effective 10 August 2025). Section 54 (arrest without warrant) was substituted, and sections 46A–46E (arrest procedure and duties of the arresting officer) and 54A (duty to state the reason for arrest) were inserted. The snapshot used already consolidates these changes, which was verified from the amendment notes attached to each section.</li>
+    <li><b>The Legal Aid Act, 2000 was amended in 2026</b>, and the Women and Children Repression Prevention Act, 2000 was amended in 2020 and again in 2026. Whether the snapshots consolidate these amendments is checked in the review (Section 8).</li>
+  </ul>
+  <div class="callout sage"><b class="t">Why this matters for the demonstration</b><p>The 2026 arrest-procedure reforms are exactly what a person stopped by the police needs to know. Under section 46A the arresting officer must carry visible identification, show an identity card on demand, and prepare a witnessed memorandum of arrest. Questions on these provisions will anchor the live demonstration.</p></div>
+</section>
+
+<!-- ============================== 7 ============================== -->
+<section class="chapter">
+  <h2><span class="num">7</span>Retrieval and answer-generation pipeline</h2>
+  <p>A 7–8B model is fluent but does not reliably know Bangladeshi law. The pipeline is designed so that the model never has to <i>remember</i> the law, only explain text placed in front of it, and so that a reader can verify every claim against that text.</p>
+  <figure>
+  <svg viewBox="0 -18 1000 492" xmlns="http://www.w3.org/2000/svg" font-family="Manrope, sans-serif">
+    <defs>
+      <filter id="sh4"><feDropShadow dx="0" dy="2.5" stdDeviation="3.5" flood-color="#3A332A" flood-opacity=".13"/></filter>
+      <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C5346"/></marker>
+      <linearGradient id="q" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9805F"/><stop offset="1" stop-color="#9C4126"/></linearGradient>
+      <linearGradient id="ans" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6E9583"/><stop offset="1" stop-color="#2D4A3E"/></linearGradient>
+    </defs>
+    <!-- lane labels -->
+    <text x="0" y="14" font-size="9" font-weight="700" fill="#9D9484" letter-spacing="1.5">UNDERSTAND</text>
+    <text x="0" y="178" font-size="9" font-weight="700" fill="#9D9484" letter-spacing="1.5">RETRIEVE</text>
+    <text x="0" y="338" font-size="9" font-weight="700" fill="#9D9484" letter-spacing="1.5">ANSWER</text>
+    <line x1="0" y1="160" x2="1000" y2="160" stroke="#EDE6DA" stroke-width="1.5"/>
+    <line x1="0" y1="320" x2="1000" y2="320" stroke="#EDE6DA" stroke-width="1.5"/>
+
+    <!-- question -->
+    <g filter="url(#sh4)"><rect x="0" y="30" width="150" height="86" rx="16" fill="url(#q)"/></g>
+    <text x="75" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#FBF8F3">Question</text>
+    <text x="75" y="78" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".92">Bangla · English</text>
+    <text x="75" y="93" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".92">Banglish</text>
+    <path d="M150 73 H 186" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <!-- safety diamond -->
+    <g filter="url(#sh4)"><path d="M262 22 L 334 73 L 262 124 L 190 73 Z" fill="#F0D8D0" stroke="#B85541" stroke-width="1.5"/></g>
+    <text x="262" y="69" text-anchor="middle" font-size="10" font-weight="700" fill="#8E3A2C">Emergency?</text>
+    <text x="262" y="84" text-anchor="middle" font-size="8.5" fill="#8E3A2C">rule-based</text>
+    <path d="M262 22 V 4 H 420" stroke="#B85541" stroke-width="1.8" fill="none" marker-end="url(#a4)"/>
+    <text x="276" y="0" font-size="8.5" font-weight="700" fill="#8E3A2C">yes</text>
+    <rect x="424" y="-6" width="170" height="22" rx="11" fill="#B85541"/><text x="509" y="9" text-anchor="middle" font-size="9" font-weight="700" fill="#FBF8F3">999 · 16430 card, no LLM</text>
+    <path d="M334 73 H 370" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <!-- verified card diamond -->
+    <g filter="url(#sh4)"><path d="M452 30 L 530 73 L 452 116 L 374 73 Z" fill="#DCE8E1" stroke="#4A6F5E" stroke-width="1.5"/></g>
+    <text x="452" y="69" text-anchor="middle" font-size="9.5" font-weight="700" fill="#2D4A3E">Verified card</text>
+    <text x="452" y="83" text-anchor="middle" font-size="9.5" font-weight="700" fill="#2D4A3E">matches?</text>
+    <path d="M452 116 V 140 H 930 V 360" stroke="#4A6F5E" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#a4)"/>
+    <text x="470" y="134" font-size="8.5" font-weight="700" fill="#2D4A3E">yes → pre-reviewed answer</text>
+    <path d="M530 73 H 566" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <!-- rewrite -->
+    <g filter="url(#sh4)"><rect x="570" y="34" width="190" height="78" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="665" y="60" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Query rewrite</text>
+    <text x="665" y="78" text-anchor="middle" font-size="9.2" fill="#5C5346">Banglish → Bangla,</text>
+    <text x="665" y="93" text-anchor="middle" font-size="9.2" fill="#5C5346">standalone search query</text>
+    <path d="M760 73 H 800 V 196" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+
+    <!-- retrieve lane -->
+    <g filter="url(#sh4)"><rect x="700" y="200" width="200" height="90" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="800" y="226" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Dense search</text>
+    <text x="800" y="244" text-anchor="middle" font-size="9.2" fill="#5C5346">BGE-M3 cosine, top 20</text>
+    <text x="800" y="260" text-anchor="middle" font-size="9.2" fill="#5C5346">cross-lingual: BN query</text>
+    <text x="800" y="275" text-anchor="middle" font-size="9.2" fill="#5C5346">finds EN statute</text>
+    <g filter="url(#sh4)"><rect x="470" y="200" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="565" y="226" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Keyword search</text>
+    <text x="565" y="244" text-anchor="middle" font-size="9.2" fill="#5C5346">BM25, top 20</text>
+    <text x="565" y="260" text-anchor="middle" font-size="9.2" fill="#5C5346">exact terms, section</text>
+    <text x="565" y="275" text-anchor="middle" font-size="9.2" fill="#5C5346">numbers ("৫৪", "54")</text>
+    <path d="M800 196 H 565 V 196" stroke="#5C5346" stroke-width="2" fill="none"/>
+    <path d="M565 196 V 198" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <path d="M470 245 H 400" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <path d="M700 290 V 302 H 330 V 290" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <g filter="url(#sh4)"><rect x="230" y="200" width="166" height="90" rx="14" fill="#F5E2D6" stroke="#C96442"/></g>
+    <text x="313" y="226" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9C4126">Fuse (RRF)</text>
+    <text x="313" y="244" text-anchor="middle" font-size="9.2" fill="#3A332A">reciprocal rank fusion</text>
+    <text x="313" y="260" text-anchor="middle" font-size="9.2" fill="#3A332A">keep top 6 sections</text>
+    <text x="313" y="275" text-anchor="middle" font-size="8.6" fill="#7B7160">(reranker only if needed)</text>
+    <path d="M230 245 H 120 V 356" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+
+    <!-- answer lane -->
+    <g filter="url(#sh4)"><rect x="20" y="360" width="200" height="96" rx="14" fill="#1F1B16"/></g>
+    <text x="120" y="386" text-anchor="middle" font-size="11.5" font-weight="700" fill="#FBF8F3">Generate</text>
+    <text x="120" y="404" text-anchor="middle" font-size="9.2" fill="#E1D8C7">Qwen3-8B · temp 0.1–0.2</text>
+    <text x="120" y="420" text-anchor="middle" font-size="9.2" fill="#E1D8C7">fixed answer template</text>
+    <text x="120" y="436" text-anchor="middle" font-size="9.2" fill="#E1D8C7">only provided sections</text>
+    <path d="M220 408 H 266" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <g filter="url(#sh4)"><path d="M350 362 L 432 408 L 350 454 L 268 408 Z" fill="#FBF4E3" stroke="#C99846" stroke-width="1.5"/></g>
+    <text x="350" y="404" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6B4A12">Citations ⊆</text>
+    <text x="350" y="418" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6B4A12">retrieved?</text>
+    <path d="M350 454 V 466 H 600" stroke="#B85541" stroke-width="1.8" fill="none" marker-end="url(#a4)"/>
+    <text x="372" y="463" font-size="8.5" font-weight="700" fill="#8E3A2C">no → refuse, route to 16430</text>
+    <path d="M432 408 H 478" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <g filter="url(#sh4)"><rect x="482" y="360" width="250" height="96" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
+    <text x="607" y="384" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1F1B16">Assemble response</text>
+    <text x="607" y="402" text-anchor="middle" font-size="9.2" fill="#5C5346">short answer · your rights · what to do</text>
+    <text x="607" y="418" text-anchor="middle" font-size="9.2" fill="#5C5346">citation chips + verbatim statute</text>
+    <text x="607" y="434" text-anchor="middle" font-size="9.2" fill="#5C5346">bilingual disclaimer</text>
+    <path d="M732 408 H 836" stroke="#5C5346" stroke-width="2" fill="none" marker-end="url(#a4)"/>
+    <g filter="url(#sh4)"><rect x="840" y="364" width="160" height="88" rx="16" fill="url(#ans)"/></g>
+    <text x="920" y="398" text-anchor="middle" font-size="12" font-weight="700" fill="#FBF8F3">Answer</text>
+    <text x="920" y="417" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".92">streamed to iPhone</text>
+    <text x="920" y="432" text-anchor="middle" font-size="9" fill="#FBF8F3" opacity=".92">in user's language</text>
+  </svg>
+  <figcaption><b>Figure 4. Query pipeline.</b> Two short-circuits come before any model call: emergencies return hotline numbers immediately, and questions matching a pre-reviewed answer card return that card. Only the remaining questions reach the language model. Its output is discarded if it cites a section that retrieval did not supply.</figcaption>
+  </figure>
+
+  <h3>7.1 Why each stage exists</h3>
+  <table>
+    <tr><th style="width:24%">Stage</th><th>Purpose</th><th style="width:30%">Failure it prevents</th></tr>
+    <tr><td>Emergency pre-check</td><td>Keyword rules (e.g. "beating me", <span class="bn">মারছে</span>, "taken away now") return 999 and 16430 instantly.</td><td>A person in danger waiting for a slow model to answer.</td></tr>
+    <tr><td>Verified answer cards</td><td>About 30 of the most likely questions are answered from text reviewed against the statute in advance.</td><td>Model error on exactly the questions the audience is most likely to ask.</td></tr>
+    <tr><td>Query rewrite</td><td>Romanised Bangla is converted to Bangla script and made self-contained using the conversation so far.</td><td>Banglish queries matching no keywords; follow-up questions ("what about women?") losing context.</td></tr>
+    <tr><td>Hybrid retrieval + RRF</td><td>Dense vectors capture meaning across languages; BM25 captures exact terms and section numbers. Rank fusion combines them without score calibration.</td><td>Either method alone missing a relevant section.</td></tr>
+    <tr><td>Bilingual context</td><td>Where both language versions exist (currently the Constitution), both are given to the model.</td><td>The 8B model misreading Bangla legal register it has seen less often.</td></tr>
+    <tr><td>Citation validation</td><td>Every section the model cites must be among the retrieved sections; otherwise the answer is withheld.</td><td>Invented or mis-numbered citations, the most dangerous failure in legal Q&amp;A.</td></tr>
+    <tr><td>Verbatim statute display</td><td>The exact provision text is shown under every answer.</td><td>Users relying on a paraphrase that subtly changes the law.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 8 ============================== -->
+<section class="chapter">
+  <h2><span class="num">8</span>Corpus review method</h2>
+  <p>No legal professional is available to review the corpus before the presentation, so review is performed by the AI assistant using checks that are mechanical and repeatable wherever possible. This is a limitation and is stated as one. The review checks that the corpus faithfully reproduces the official text. It does not certify that any answer is legally correct for a particular person's situation.</p>
+  <ol>
+    <li><b>Completeness:</b> parsed section count against the number of rows on the source page; investigate every gap. <i>Applied:</i> this found that bdlaws splits sub-sections into separate rows. The first parser silently dropped 84 such rows from the CrPC, including the end of section 54. Fixed by merging them into the preceding section.</li>
+    <li><b>Script handling:</b> Bangla section numbers terminate with either <span class="bn">।</span> (U+0964) or the visually identical <span class="bn">৷</span> (U+09F7). <i>Applied:</i> accepting both raised the RTI Act from 8 to 37 sections and the ICT Act from 1 to 85.</li>
+    <li><b>Language parity:</b> where both versions exist, English and Bangla section labels must match one-to-one. <i>Applied:</i> Constitution, 167 = 167 after the fixes above.</li>
+    <li><b>Key-provision spot checks:</b> the provisions most likely to be cited (Constitution Arts. 27, 31–35; CrPC §§46A–46E, 54, 54A, 61, 167; RTI §§4, 8, 9; Torture and Custodial Death Act) are read in full against the source page.</li>
+    <li><b>Currency:</b> the repeal or amendment status of each act is checked against the index, and the amendment notes of each key section are inspected.</li>
+    <li><b>Residue:</b> scan for footnote text that leaked into the statute body, navigation text, or empty sections.</li>
+  </ol>
+  {{REVIEW_STATUS}}
+
+  <!-- ============================== 9 ============================== -->
+  <h2 style="margin-top:8mm"><span class="num">9</span>Evaluation plan</h2>
+  <p>Model choice and retrieval settings are decided by measurement on a fixed question set, not by impression.</p>
+  <table>
+    <tr><th style="width:26%">Measure</th><th>Method</th><th style="width:22%">Target</th></tr>
+    <tr><td>Generation speed</td><td>Tokens per second and time-to-first-token on the M4, with models warm, on a 6-section prompt.</td><td>First token &lt; 3 s; ≥ 15 tok/s</td></tr>
+    <tr><td>Retrieval recall@6</td><td>About 50 questions (Bangla, English, Banglish), each labelled with the section(s) that answer it.</td><td>≥ 0.85 on P0 topics</td></tr>
+    <tr><td>Citation validity</td><td>Share of answers whose every citation is in the retrieved set and supports the claim.</td><td>100% after validation filter</td></tr>
+    <tr><td>Bangla quality</td><td>Fluency and correctness of Bangla answers, judged by the assistant against the source provisions for both candidate models.</td><td>Comparative; pick the better model</td></tr>
+    <tr><td>Refusal behaviour</td><td>Advice-seeking, evasion and out-of-scope prompts (e.g. Indian CrPC numbering).</td><td>All refused or redirected</td></tr>
+  </table>
+  {{EVAL_RESULTS}}
+</section>
+
+<!-- ============================== 10 ============================== -->
+<section class="chapter">
+  <h2><span class="num">10</span>Demonstration setup</h2>
+  <div class="grid2">
+    <div>
+      <h4>Network</h4>
+      <p>The MacBook joins the iPhone's Personal Hotspot. Venue Wi-Fi often isolates clients from one another, which would prevent the phone reaching the laptop. A hotspot avoids this and also shows that no outside network is needed. The app is configured with the laptop's address on the hotspot network.</p>
+      <h4>Client</h4>
+      <p>Expo Go on the iPhone loads the app from Metro on the laptop. Before the presentation, it will be confirmed that the App Store version of Expo Go supports the project's SDK (54).</p>
+    </div>
+    <div>
+      <h4>Laptop state</h4>
+      <ul>
+        <li>On mains power, because a fanless chassis throttles more on battery.</li>
+        <li>Models pre-loaded with a long keep-alive, so the first question is not slowed by loading.</li>
+        <li>Other heavy applications closed to protect the memory headroom (Figure 2).</li>
+      </ul>
+      <h4>Fallback</h4>
+      <p>A screen recording of the full scripted demonstration, captured on Day 5, is kept on both devices.</p>
+    </div>
+  </div>
+  <h3>10.1 What the demonstration will show</h3>
+  <table>
+    <tr><th style="width:36%">Scenario</th><th>Expected behaviour</th></tr>
+    <tr><td class="bn">পুলিশ কি ওয়ারেন্ট ছাড়া গ্রেফতার করতে পারে?</td><td>Bangla answer citing CrPC §54 (as substituted in 2026) and Constitution Art. 33, with verbatim text.</td></tr>
+    <tr><td>"Police officer won't tell me his name"</td><td>CrPC §46A: duty to wear identification and show an identity card on demand.</td></tr>
+    <tr><td>"How long can they hold me?"</td><td>CrPC §61 and Art. 33(2): production before a magistrate within 24 hours.</td></tr>
+    <tr><td>Banglish: "RTI application kivabe korbo"</td><td>Rewritten to Bangla; RTI Act §8 procedure.</td></tr>
+    <tr><td>"Should I confess so they let me go?"</td><td><span class="pill sage ok">refuses advice</span> Explains rights and routes to legal aid 16430.</td></tr>
+    <tr><td>"They are beating me right now"</td><td><span class="pill bad">emergency</span> Hotline card in under a second, no model call.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 11 ============================== -->
+<section class="chapter">
+  <h2><span class="num">11</span>Schedule</h2>
+  <figure>
+  <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" font-family="Manrope, sans-serif">
+    <defs>
+      <linearGradient id="b1" x1="0" x2="1"><stop offset="0" stop-color="#D9805F"/><stop offset="1" stop-color="#C96442"/></linearGradient>
+      <linearGradient id="b2" x1="0" x2="1"><stop offset="0" stop-color="#6E9583"/><stop offset="1" stop-color="#4A6F5E"/></linearGradient>
+      <linearGradient id="b3" x1="0" x2="1"><stop offset="0" stop-color="#DDB66F"/><stop offset="1" stop-color="#C99846"/></linearGradient>
+      <filter id="sh5"><feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#3A332A" flood-opacity=".15"/></filter>
+    </defs>
+    <g font-size="10.5" font-weight="700" fill="#5C5346" text-anchor="middle">
+      <text x="300" y="18">Day 1 · 22 Oct</text><text x="440" y="18">Day 2 · 23 Oct</text><text x="580" y="18">Day 3 · 24 Oct</text><text x="720" y="18">Day 4 · 25 Oct</text><text x="860" y="18">Day 5 · 26 Oct</text>
+    </g>
+    <g stroke="#EDE6DA" stroke-width="1.5"><line x1="230" y1="28" x2="230" y2="290"/><line x1="370" y1="28" x2="370" y2="290"/><line x1="510" y1="28" x2="510" y2="290"/><line x1="650" y1="28" x2="650" y2="290"/><line x1="790" y1="28" x2="790" y2="290"/><line x1="930" y1="28" x2="930" y2="290"/></g>
+    <rect x="230" y="28" width="140" height="262" fill="#F5E2D6" opacity=".45"/>
+    <g font-size="10.5" fill="#1F1B16" font-weight="600">
+      <text x="0" y="56">Models + benchmark</text><text x="0" y="90">Corpus fetch &amp; parse</text><text x="0" y="124">Corpus review</text><text x="0" y="158">Index + retrieval eval</text><text x="0" y="192">Answer cards</text><text x="0" y="226">API /ask</text><text x="0" y="260">App Ask screen + iPhone</text><text x="0" y="288">Rehearsal &amp; recording</text>
+    </g>
+    <g filter="url(#sh5)">
+      <rect x="236" y="42" width="128" height="20" rx="10" fill="url(#b1)"/>
+      <rect x="236" y="76" width="128" height="20" rx="10" fill="url(#b1)"/>
+      <rect x="300" y="110" width="140" height="20" rx="10" fill="url(#b3)"/>
+      <rect x="376" y="144" width="200" height="20" rx="10" fill="url(#b2)"/>
+      <rect x="400" y="178" width="176" height="20" rx="10" fill="url(#b3)"/>
+      <rect x="516" y="212" width="128" height="20" rx="10" fill="url(#b1)"/>
+      <rect x="560" y="246" width="224" height="20" rx="10" fill="url(#b2)"/>
+      <rect x="796" y="276" width="128" height="18" rx="9" fill="#1F1B16"/>
+    </g>
+    <g transform="translate(950 140)">
+      <path d="M0 -18 L 14 0 L 0 18 L -14 0 Z" fill="#B85541"/>
+      <text x="0" y="40" text-anchor="middle" font-size="10" font-weight="700" fill="#8E3A2C">27 Oct</text>
+      <text x="0" y="54" text-anchor="middle" font-size="9" fill="#8E3A2C">present</text>
+    </g>
+    <text x="300" y="300" text-anchor="middle" font-size="8.5" font-weight="700" fill="#9C4126" letter-spacing="1">TODAY</text>
+  </svg>
+  <figcaption><b>Figure 5. Five-day plan.</b> Day 5 is reserved for rehearsal only. Nothing new is added on the last day, because untested changes are the most likely cause of a failed live demonstration.</figcaption>
+  </figure>
+  <h3>11.1 Scope gates</h3>
+  <p>Components that are not essential are included only if a measurement justifies them:</p>
+  <ul>
+    <li>The <b>Gemma-3-12B</b> comparison runs only if Qwen3-8B's Bangla is judged inadequate.</li>
+    <li>The <b>bge-reranker-v2-m3</b> reranker is added only if retrieval recall@6 falls below target.</li>
+    <li><b>Voice input</b> and <b>P2 acts</b> are deferred beyond the presentation.</li>
+  </ul>
+
+  <!-- ============================== 12 ============================== -->
+  <h2 style="margin-top:8mm"><span class="num">12</span>Risks and open issues</h2>
+  <table>
+    <tr><th style="width:6%">#</th><th>Risk</th><th style="width:12%">Likelihood</th><th style="width:36%">Mitigation</th></tr>
+    {{RISKS}}
+  </table>
+</section>
+
+<!-- ============================== A ============================== -->
+<section class="chapter newpage">
+  <h2><span class="num">A</span>Procedure log and reproduction commands</h2>
+  <p>A chronological record of what was done, sufficient for another person to reproduce the current state from a clean machine.</p>
+  {{PROCEDURE}}
+
+  <h2 style="margin-top:8mm"><span class="num">B</span>Version-control history</h2>
+  <p>Work is committed in small, self-contained steps so that each change can be reviewed and, if necessary, reverted on its own.</p>
+  <table>
+    <tr><th style="width:14%">Commit</th><th style="width:16%">Date</th><th>Message</th></tr>
+    {{COMMITS}}
+  </table>
+</section>
+</body>
+</html>
