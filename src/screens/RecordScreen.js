@@ -27,6 +27,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import ActionButton from '../components/ActionButton';
 import { getAllEvidence, addEvidence } from '../services/storageService';
+import { sealEvidence } from '../services/integrityService';
 
 export default function RecordScreen({ navigation }) {
   const { strings } = useLanguage();
@@ -80,19 +81,6 @@ export default function RecordScreen({ navigation }) {
     return `${m}:${s}`;
   };
 
-  /**
-   * Simple deterministic hash — adequate for a tamper-detection fingerprint.
-   * In production, swap this for expo-crypto SHA-256.
-   */
-  const createHash = (text) => {
-    let hash = 0;
-    for (let i = 0; i < text.length; i += 1) {
-      hash = (hash << 5) - hash + text.charCodeAt(i);
-      hash |= 0;
-    }
-    return Math.abs(hash).toString(16).padStart(8, '0');
-  };
-
   const permissionsGranted = camPerm?.granted && micPerm?.granted;
 
   const requestAllPermissions = useCallback(async () => {
@@ -116,17 +104,19 @@ export default function RecordScreen({ navigation }) {
       } catch { /* keep cached coords */ }
 
       const createdAt = new Date().toISOString();
-      const rawHashText = `${video.uri}|${coords?.latitude ?? 0},${coords?.longitude ?? 0}|${createdAt}`;
-      const hash = createHash(rawHashText);
+      const latitude = coords?.latitude ?? null;
+      const longitude = coords?.longitude ?? null;
+      const seal = await sealEvidence({ fileUri: video.uri, latitude, longitude, createdAt });
 
       const evidence = {
         id: Date.now().toString(),
         type: 'video',
         fileUri: video.uri,
         note: note || 'Untitled recording',
-        latitude: coords?.latitude ?? null,
-        longitude: coords?.longitude ?? null,
-        hash,
+        latitude,
+        longitude,
+        hash: seal.contentHash,
+        ...seal,
         createdAt,
       };
 

@@ -32,12 +32,25 @@ import * as Sharing from 'expo-sharing';
 import { useLanguage } from '../context/LanguageContext';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import { deleteEvidence } from '../services/storageService';
+import { verifyEvidence } from '../services/integrityService';
+
+const INTEGRITY_RESULT = {
+  intact: { key: 'integrityIntact', color: COLORS.success },
+  modified: { key: 'integrityModified', color: COLORS.danger },
+  unverifiable: { key: 'integrityUnverifiable', color: COLORS.warningMid },
+};
 
 export default function EvidenceDetailScreen({ route, navigation }) {
   const { strings = {} } = useLanguage();
   const evidence = route?.params?.evidence || null;
   const videoRef = useRef(null);
   const [videoStatus, setVideoStatus] = useState({});
+  const [integrity, setIntegrity] = useState(null);
+
+  const handleVerify = async () => {
+    setIntegrity('checking');
+    setIntegrity(await verifyEvidence(evidence));
+  };
 
   /* ---- Share ---- */
   const handleShare = async () => {
@@ -177,8 +190,24 @@ export default function EvidenceDetailScreen({ route, navigation }) {
             {evidence.hash || 'Not available'}
           </Text>
           <Text style={styles.hashHint}>
-            This hash can be used to verify the evidence has not been tampered with.
+            {evidence.hashAlgorithm === 'SHA-256' ? strings.hashHint : strings.hashLegacy}
           </Text>
+          <TouchableOpacity
+            style={styles.verifyBtn}
+            onPress={handleVerify}
+            disabled={integrity === 'checking'}
+            activeOpacity={0.8}
+          >
+            <Feather name="check-circle" size={16} color={COLORS.successDark} />
+            <Text style={styles.verifyBtnText}>
+              {integrity === 'checking' ? strings.integrityChecking : strings.verifyIntegrity}
+            </Text>
+          </TouchableOpacity>
+          {INTEGRITY_RESULT[integrity] && (
+            <Text style={[styles.integrityResult, { color: INTEGRITY_RESULT[integrity].color }]}>
+              {strings[INTEGRITY_RESULT[integrity].key]}
+            </Text>
+          )}
         </View>
 
         {/* ---- Action Buttons ---- */}
@@ -335,6 +364,29 @@ const styles = StyleSheet.create({
     fontSize: FONTS.size.xs,
     color: COLORS.textMuted,
     fontStyle: 'italic',
+  },
+  verifyBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: SPACING.xs,
+    marginTop: SPACING.md,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    borderRadius: RADIUS.pill,
+    borderWidth: 1,
+    borderColor: COLORS.successBorder,
+    backgroundColor: COLORS.surface,
+  },
+  verifyBtnText: {
+    fontSize: FONTS.size.sm,
+    fontWeight: FONTS.weight.semibold,
+    color: COLORS.successDark,
+  },
+  integrityResult: {
+    marginTop: SPACING.sm,
+    fontSize: FONTS.size.sm,
+    fontWeight: FONTS.weight.semibold,
   },
 
   /* Action buttons */
