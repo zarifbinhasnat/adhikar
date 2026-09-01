@@ -18,26 +18,26 @@ const RTI_STEPS = [
   {
     titleEn: 'Write your application',
     titleBn: 'আবেদন লিখুন',
-    descEn: 'Write a clear application in Bangla or English specifying exactly what information you want. Use the template below.',
-    descBn: 'বাংলা বা ইংরেজিতে একটি স্পষ্ট আবেদন লিখুন যেখানে আপনি ঠিক কী তথ্য চান তা উল্লেখ করুন। নিচের টেমপ্লেট ব্যবহার করুন।',
+    descEn: 'Apply in writing, or by e-mail or other electronic means (§8(1)). Give your name and address, a precise description of the information, and how you want to receive it: inspection, copy, notes or another way (§8(2)). Use the authority\'s printed form if it has one; otherwise plain paper is accepted (§8(3)).',
+    descBn: 'লিখিতভাবে, অথবা ই-মেইল বা অন্য ইলেকট্রনিক মাধ্যমে আবেদন করুন (ধারা ৮(১))। আপনার নাম-ঠিকানা, চাওয়া তথ্যের নির্ভুল বর্ণনা এবং কীভাবে তথ্য পেতে চান (পরিদর্শন, অনুলিপি, নোট বা অন্য উপায়) উল্লেখ করুন (ধারা ৮(২))। কর্তৃপক্ষের মুদ্রিত ফরম থাকলে সেটি ব্যবহার করুন; না থাকলে সাদা কাগজেও চলবে (ধারা ৮(৩))।',
   },
   {
-    titleEn: 'Submit and pay fee',
-    titleBn: 'জমা দিন এবং ফি প্রদান করুন',
-    descEn: 'Submit your application to the Designated Officer. The fee is nominal (typically BDT 5). Keep a copy and receipt.',
-    descBn: 'দায়িত্বপ্রাপ্ত কর্মকর্তার কাছে আবেদন জমা দিন। ফি সাধারণত ৫ টাকা। কপি ও রসিদ রাখুন।',
+    titleEn: 'Submit and keep proof',
+    titleBn: 'জমা দিন এবং প্রমাণ রাখুন',
+    descEn: 'Submit to the Designated Officer. Any fee is set by rules under the Act, so ask the officer for the amount. Keep a copy and the receipt.',
+    descBn: 'দায়িত্বপ্রাপ্ত কর্মকর্তার কাছে জমা দিন। কোনো ফি থাকলে তা আইনের অধীন বিধিমালায় নির্ধারিত, তাই কর্মকর্তার কাছে পরিমাণ জেনে নিন। কপি ও রসিদ রাখুন।',
   },
   {
-    titleEn: 'Wait for response',
-    titleBn: 'উত্তরের জন্য অপেক্ষা করুন',
-    descEn: 'The authority must respond within 20 working days (30 days if multiple authorities involved). If refused, you can appeal.',
-    descBn: 'কর্তৃপক্ষকে ২০ কার্যদিবসের মধ্যে উত্তর দিতে হবে। প্রত্যাখ্যাত হলে আপিল করতে পারবেন।',
+    titleEn: 'Deadlines for the authority',
+    titleBn: 'কর্তৃপক্ষের সময়সীমা',
+    descEn: 'Information is due within 20 working days (§9(1)), or 30 working days if more than one unit or authority is involved (§9(2)). If it concerns someone\'s life or death, arrest, or release from jail, initial information is due within 24 hours (§9(4)). A refusal must be sent with reasons within 10 working days (§9(3)).',
+    descBn: '২০ কার্যদিবসের মধ্যে তথ্য দিতে হবে (ধারা ৯(১)); একাধিক ইউনিট বা কর্তৃপক্ষ জড়িত থাকলে ৩০ কার্যদিবস (ধারা ৯(২))। কারও জীবন-মৃত্যু, গ্রেপ্তার বা কারাগার থেকে মুক্তি সম্পর্কিত হলে ২৪ ঘণ্টার মধ্যে প্রাথমিক তথ্য দিতে হবে (ধারা ৯(৪))। তথ্য দিতে অপারগ হলে ১০ কার্যদিবসের মধ্যে কারণসহ জানাতে হবে (ধারা ৯(৩))।',
   },
   {
-    titleEn: 'Appeal if needed',
-    titleBn: 'প্রয়োজনে আপিল করুন',
-    descEn: 'If denied, appeal to the Appeal Authority within the same office. If still denied, complain to the Information Commission.',
-    descBn: 'প্রত্যাখ্যাত হলে একই অফিসের আপিল কর্তৃপক্ষের কাছে আপিল করুন। তারপরও প্রত্যাখ্যাত হলে তথ্য কমিশনে অভিযোগ করুন।',
+    titleEn: 'Appeal, then complain',
+    titleBn: 'আপিল, তারপর অভিযোগ',
+    descEn: 'If you get no answer in time or disagree with the decision, appeal to the Appeal Authority within 30 days; it must decide within 15 days (§24). If that fails, complain to the Information Commission within 30 days (§25).',
+    descBn: 'সময়মতো তথ্য না পেলে বা সিদ্ধান্তে সংক্ষুব্ধ হলে ৩০ দিনের মধ্যে আপিল কর্তৃপক্ষের কাছে আপিল করুন; তাঁকে ১৫ দিনের মধ্যে সিদ্ধান্ত দিতে হবে (ধারা ২৪)। তাতেও সমাধান না হলে ৩০ দিনের মধ্যে তথ্য কমিশনে অভিযোগ করুন (ধারা ২৫)।',
   },
 ];
 
@@ -53,7 +53,9 @@ Dear Sir/Madam,
 Under Section 8 of the Right to Information Act, 2009, I am requesting the following information:
 
 1. [Describe the information you need clearly]
-2. [Additional information if any]
+2. [Any detail that helps locate the information]
+
+I wish to receive the information by: [inspection / copy / taking notes / other]
 
 I am willing to pay the prescribed fee.
 
@@ -61,6 +63,7 @@ Applicant Details:
 Name: [Your Name]
 Address: [Your Address]
 Contact: [Your Phone Number]
+E-mail: [if any]
 
 Date: [Date]
 Signature: ___________`;
