@@ -50,3 +50,6 @@ AGENTS.md
 
 # Report build output
 docs/report/build/
+
+# Hub runtime data (uploaded evidence)
+server/data/
