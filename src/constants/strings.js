@@ -10,9 +10,7 @@ const STRINGS = {
     searchPlaceholder: 'Search laws / ask a question',
     whatDoYouNeed: 'What do you need?',
     emergencyButton: "I'm in danger now",
-    offlinePacks: 'Downloaded offline packs',
-    arrestDetention: 'Arrest & detention',
-    grsGuide: 'GRS complaint guide',
+    offlinePacks: 'Law packs on this phone',
 
     // Navigation cards
     policeStop: 'Police stop',
@@ -128,6 +126,28 @@ const STRINGS = {
     integrityIntact: 'Intact: the file and its time and location match the seal.',
     integrityModified: 'Changed: the file or its metadata no longer matches the seal.',
     integrityUnverifiable: 'Cannot verify: the file is missing or was recorded without a seal.',
+
+
+    // Law packs
+    packsTitle: 'Law packs',
+    packsDesc: 'Official text of Bangladeshi laws, downloaded to this phone so you can read it without a connection.',
+    hubOnline: 'Connected to Adhikar hub',
+    hubOffline: 'Hub not reachable. Showing packs already on this phone.',
+    download: 'Download',
+    downloading: 'Downloading…',
+    updatePack: 'Update',
+    open: 'Open',
+    remove: 'Remove',
+    exportText: 'Export text',
+    installed: 'On this phone',
+    checksumOk: 'Checksum verified',
+    checksumFailed: 'Checksum failed. Download it again.',
+    sectionsCount: 'sections',
+    noPacks: 'No law packs on this phone yet.',
+    managePacks: 'Download law packs',
+    searchSections: 'Search this pack…',
+    sourceLabel: 'Source',
+    downloadFailed: 'Download failed',
   },
 
   BN: {
@@ -136,9 +156,7 @@ const STRINGS = {
     searchPlaceholder: 'আইন খুঁজুন / প্রশ্ন করুন',
     whatDoYouNeed: 'আপনার কী প্রয়োজন?',
     emergencyButton: 'আমি এখন বিপদে আছি',
-    offlinePacks: 'ডাউনলোড করা অফলাইন প্যাক',
-    arrestDetention: 'গ্রেফতার ও আটক',
-    grsGuide: 'GRS অভিযোগ গাইড',
+    offlinePacks: 'এই ফোনে থাকা আইন প্যাক',
 
     // Navigation cards
     policeStop: 'পুলিশ স্টপ',
@@ -254,6 +272,28 @@ const STRINGS = {
     integrityIntact: 'অক্ষত: ফাইল এবং এর সময় ও অবস্থান সিলের সাথে মিলেছে।',
     integrityModified: 'পরিবর্তিত: ফাইল বা এর তথ্য আর সিলের সাথে মিলছে না।',
     integrityUnverifiable: 'যাচাই করা যাচ্ছে না: ফাইলটি নেই অথবা সিল ছাড়া রেকর্ড করা হয়েছিল।',
+
+
+    // Law packs
+    packsTitle: 'আইন প্যাক',
+    packsDesc: 'বাংলাদেশের আইনের সরকারি পাঠ, এই ফোনে ডাউনলোড করা, যাতে সংযোগ ছাড়াই পড়া যায়।',
+    hubOnline: 'অধিকার হাবের সাথে সংযুক্ত',
+    hubOffline: 'হাবে সংযোগ পাওয়া যাচ্ছে না। এই ফোনে থাকা প্যাক দেখানো হচ্ছে।',
+    download: 'ডাউনলোড',
+    downloading: 'ডাউনলোড হচ্ছে…',
+    updatePack: 'আপডেট',
+    open: 'খুলুন',
+    remove: 'মুছুন',
+    exportText: 'পাঠ রপ্তানি',
+    installed: 'এই ফোনে আছে',
+    checksumOk: 'চেকসাম যাচাইকৃত',
+    checksumFailed: 'চেকসাম মেলেনি। আবার ডাউনলোড করুন।',
+    sectionsCount: 'ধারা',
+    noPacks: 'এই ফোনে এখনো কোনো আইন প্যাক নেই।',
+    managePacks: 'আইন প্যাক ডাউনলোড করুন',
+    searchSections: 'এই প্যাকে খুঁজুন…',
+    sourceLabel: 'উৎস',
+    downloadFailed: 'ডাউনলোড ব্যর্থ',
   },
 };
 

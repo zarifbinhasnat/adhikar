@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View, Text, StyleSheet, Pressable,
   ScrollView, SafeAreaView, TextInput,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { getInstalled } from '../services/packService';
 import { useLanguage } from '../context/LanguageContext';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import RIGHTS_DATA from '../data/rightsData';
@@ -23,6 +25,11 @@ const NAV_CARDS = [
 export default function HomeScreen({ navigation }) {
   const { language, strings, toggleLanguage } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
+  const [installedPacks, setInstalledPacks] = useState([]);
+
+  useFocusEffect(useCallback(() => {
+    getInstalled().then((installed) => setInstalledPacks(Object.values(installed)));
+  }, []));
 
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -141,14 +148,23 @@ export default function HomeScreen({ navigation }) {
             <Ionicons name="cloud-offline-outline" size={18} color={COLORS.textLight} />
             <Text style={styles.offlineTitle}>{strings.offlinePacks}</Text>
           </View>
-          <View style={styles.offlineItem}>
-            <View style={styles.offlineDot} />
-            <Text style={styles.offlineItemText}>{strings.arrestDetention}</Text>
-          </View>
-          <View style={styles.offlineItem}>
-            <View style={styles.offlineDot} />
-            <Text style={styles.offlineItemText}>{strings.grsGuide}</Text>
-          </View>
+          {installedPacks.length === 0 && (
+            <Text style={styles.offlineItemText}>{strings.noPacks}</Text>
+          )}
+          {installedPacks.map((pack) => (
+            <Pressable
+              key={pack.id}
+              style={styles.offlineItem}
+              onPress={() => navigation.navigate('PackReader', { packId: pack.id })}
+            >
+              <View style={styles.offlineDot} />
+              <Text style={styles.offlineItemText}>{language === 'BN' ? pack.title_bn : pack.title_en}</Text>
+            </Pressable>
+          ))}
+          <Pressable style={styles.managePacks} onPress={() => navigation.navigate('OfflinePacks')}>
+            <Ionicons name="download-outline" size={16} color={COLORS.primary} />
+            <Text style={styles.managePacksText}>{strings.managePacks}</Text>
+          </Pressable>
         </View>
 
       </ScrollView>
@@ -334,5 +350,16 @@ const styles = StyleSheet.create({
     fontSize: FONTS.size.sm,
     fontFamily: F.normal,
     color: COLORS.textMuted,
+  },
+  managePacks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    marginTop: SPACING.md,
+  },
+  managePacksText: {
+    fontSize: FONTS.size.sm,
+    fontFamily: F.semibold,
+    color: COLORS.primary,
   },
 });

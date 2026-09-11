@@ -31,6 +31,8 @@ import LegalAidScreen from './src/screens/LegalAidScreen';
 import RTIScreen from './src/screens/RTIScreen';
 import EvidenceVaultScreen from './src/screens/EvidenceVaultScreens';
 import EvidenceDetailScreen from './src/screens/EvidenceDetailScreen';
+import OfflinePacksScreen from './src/screens/OfflinePacksScreen';
+import PackReaderScreen from './src/screens/PackReaderScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,6 +122,8 @@ export default function App() {
           <Stack.Screen name="RTI"           component={RTIScreen}           options={{ title: 'RTI' }} />
           <Stack.Screen name="EvidenceVault" component={EvidenceVaultScreen} options={{ title: 'Evidence vault' }} />
           <Stack.Screen name="EvidenceDetail" component={EvidenceDetailScreen} options={{ title: 'Evidence detail' }} />
+          <Stack.Screen name="OfflinePacks"  component={OfflinePacksScreen}  options={{ title: 'Law packs' }} />
+          <Stack.Screen name="PackReader"    component={PackReaderScreen}    options={{ title: 'Law pack' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </LanguageProvider>
