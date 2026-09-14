@@ -31,8 +31,9 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 import { useLanguage } from '../context/LanguageContext';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
-import { deleteEvidence } from '../services/storageService';
+import { deleteEvidence, updateEvidence } from '../services/storageService';
 import { verifyEvidence } from '../services/integrityService';
+import { uploadEvidence } from '../services/hubService';
 
 const INTEGRITY_RESULT = {
   intact: { key: 'integrityIntact', color: COLORS.success },
@@ -42,10 +43,27 @@ const INTEGRITY_RESULT = {
 
 export default function EvidenceDetailScreen({ route, navigation }) {
   const { strings = {} } = useLanguage();
-  const evidence = route?.params?.evidence || null;
+  const [evidence, setEvidence] = useState(route?.params?.evidence || null);
   const videoRef = useRef(null);
   const [videoStatus, setVideoStatus] = useState({});
   const [integrity, setIntegrity] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleBackup = async () => {
+    if (evidence.hashAlgorithm !== 'SHA-256') {
+      Alert.alert(strings.backupToHub, strings.backupNeedsSeal);
+      return;
+    }
+    setUploading(true);
+    try {
+      const receipt = await uploadEvidence(evidence);
+      setEvidence(await updateEvidence(evidence.id, { hubReceipt: receipt }));
+    } catch {
+      Alert.alert(strings.backupToHub, strings.backupFailed);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleVerify = async () => {
     setIntegrity('checking');
@@ -178,6 +196,7 @@ export default function EvidenceDetailScreen({ route, navigation }) {
             value={evidence.longitude != null ? String(evidence.longitude) : 'Not available'}
           />
           <MetaRow label={strings.noteLabel || 'Note'} value={evidence.note || 'No note'} />
+          {!!evidence.witnesses && <MetaRow label={strings.witnesses} value={evidence.witnesses} />}
         </View>
 
         {/* ---- Integrity Hash Card ---- */}
@@ -206,6 +225,32 @@ export default function EvidenceDetailScreen({ route, navigation }) {
           {INTEGRITY_RESULT[integrity] && (
             <Text style={[styles.integrityResult, { color: INTEGRITY_RESULT[integrity].color }]}>
               {strings[INTEGRITY_RESULT[integrity].key]}
+            </Text>
+          )}
+        </View>
+
+        {/* ---- Hub backup ---- */}
+        <View style={styles.hashCard}>
+          <TouchableOpacity
+            style={styles.verifyBtn}
+            onPress={handleBackup}
+            disabled={uploading}
+            activeOpacity={0.8}
+          >
+            <Feather name="upload-cloud" size={16} color={COLORS.successDark} />
+            <Text style={styles.verifyBtnText}>
+              {uploading ? strings.backingUp : strings.backupToHub}
+            </Text>
+          </TouchableOpacity>
+          {evidence.hubReceipt && (
+            <Text
+              style={[
+                styles.integrityResult,
+                { color: evidence.hubReceipt.matches ? COLORS.success : COLORS.danger },
+              ]}
+            >
+              {strings.backedUpAt} {new Date(evidence.hubReceipt.receivedAt).toLocaleString()} ·{' '}
+              {evidence.hubReceipt.matches ? strings.backupDone : strings.backupMismatch}
             </Text>
           )}
         </View>

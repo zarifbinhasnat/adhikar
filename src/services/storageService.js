@@ -90,6 +90,17 @@ export async function addEvidence(evidence) {
   }
 }
 
+/**
+ * Merge fields into an existing evidence record.
+ * @returns {Promise<Object|null>} — the updated record.
+ */
+export async function updateEvidence(id, changes) {
+  const list = await getAllEvidence();
+  const updated = list.map((e) => (e.id === id ? { ...e, ...changes } : e));
+  await _persist(updated);
+  return updated.find((e) => e.id === id) || null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  DELETE                                                             */
 /* ------------------------------------------------------------------ */

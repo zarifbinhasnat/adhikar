@@ -26,8 +26,19 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLanguage } from '../context/LanguageContext';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import ActionButton from '../components/ActionButton';
+import { Directory, File, Paths } from 'expo-file-system';
 import { getAllEvidence, addEvidence } from '../services/storageService';
 import { sealEvidence } from '../services/integrityService';
+
+// The camera writes to the cache, which iOS may purge; evidence must live in documents.
+function moveToVault(tempUri, id) {
+  const vault = new Directory(Paths.document, 'evidence');
+  if (!vault.exists) vault.create();
+  const ext = tempUri.split('.').pop() || 'mov';
+  const dest = new File(vault, `${id}.${ext}`);
+  new File(tempUri).move(dest);
+  return dest.uri;
+}
 
 export default function RecordScreen({ navigation }) {
   const { strings } = useLanguage();
@@ -39,7 +50,9 @@ export default function RecordScreen({ navigation }) {
   /* ---- State ---- */
   const [isRecording, setIsRecording] = useState(false);
   const [note, setNote] = useState('');
+  const [witnesses, setWitnesses] = useState('');
   const [location, setLocation] = useState(null);
+  const [locationDenied, setLocationDenied] = useState(false);
   const [timer, setTimer] = useState(0);
   const [evidenceList, setEvidenceList] = useState([]);
   const cameraRef = useRef(null);
@@ -59,6 +72,8 @@ export default function RecordScreen({ navigation }) {
       if (status === 'granted') {
         const loc = await Location.getCurrentPositionAsync({});
         setLocation(loc.coords);
+      } else {
+        setLocationDenied(true);
       }
     })();
   }, []);
@@ -103,16 +118,19 @@ export default function RecordScreen({ navigation }) {
         coords = freshLoc.coords;
       } catch { /* keep cached coords */ }
 
+      const id = Date.now().toString();
       const createdAt = new Date().toISOString();
       const latitude = coords?.latitude ?? null;
       const longitude = coords?.longitude ?? null;
-      const seal = await sealEvidence({ fileUri: video.uri, latitude, longitude, createdAt });
+      const fileUri = moveToVault(video.uri, id);
+      const seal = await sealEvidence({ fileUri, latitude, longitude, createdAt });
 
       const evidence = {
-        id: Date.now().toString(),
+        id,
         type: 'video',
-        fileUri: video.uri,
+        fileUri,
         note: note || 'Untitled recording',
+        witnesses: witnesses.trim(),
         latitude,
         longitude,
         hash: seal.contentHash,
@@ -122,6 +140,8 @@ export default function RecordScreen({ navigation }) {
 
       const updatedList = await addEvidence(evidence);
       setEvidenceList(updatedList);
+      setNote('');
+      setWitnesses('');
       Alert.alert('✅', strings.recordingSaved);
     } catch (error) {
       console.error('Recording error:', error);
@@ -196,11 +216,8 @@ export default function RecordScreen({ navigation }) {
             <Text style={styles.metaValue}>
               {location
                 ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`
-                : strings.on}
+                : (locationDenied ? strings.gpsDenied : strings.gpsLocating)}
             </Text>
-          </Text>
-          <Text style={styles.metaLabel}>
-            {strings.witnesses}: <Text style={styles.metaValue}>—</Text>
           </Text>
         </View>
 
@@ -209,6 +226,13 @@ export default function RecordScreen({ navigation }) {
           value={note}
           onChangeText={setNote}
           placeholder={strings.incidentNote}
+          placeholderTextColor={COLORS.textLight}
+        />
+        <TextInput
+          style={styles.noteInput}
+          value={witnesses}
+          onChangeText={setWitnesses}
+          placeholder={`${strings.witnesses}: ${strings.witnessesPlaceholder}`}
           placeholderTextColor={COLORS.textLight}
         />
 
@@ -225,20 +249,7 @@ export default function RecordScreen({ navigation }) {
           style={styles.mainAction}
         />
 
-        <View style={styles.saveRow}>
-          <ActionButton
-            label={strings.saveOffline}
-            icon={<Ionicons name="cloud-offline-outline" size={20} color={COLORS.white} />}
-            variant="glass"
-            style={styles.saveBtn}
-          />
-          <ActionButton
-            label={strings.upload}
-            icon={<Ionicons name="cloud-upload-outline" size={20} color="white" />}
-            variant="glass"
-            style={styles.saveBtn}
-          />
-        </View>
+        <Text style={styles.savedHint}>{strings.savedToPhone}</Text>
 
         <TouchableOpacity
           style={styles.openVaultBtn}
@@ -342,11 +353,12 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
     marginBottom: SPACING.xxl,
   },
-  saveRow: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
+  savedHint: {
+    fontSize: FONTS.size.xs,
+    color: 'rgba(251,248,243,0.7)',
+    textAlign: 'center',
+    lineHeight: 18,
   },
-  saveBtn: { flex: 1 },
   openVaultBtn: {
     marginTop: SPACING.lg,
     flexDirection: 'row',

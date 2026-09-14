@@ -41,8 +41,6 @@ const STRINGS = {
     hashVerified: 'Sealed with SHA-256 when saved',
     recordBtn: 'Record',
     stopBtn: 'Stop',
-    saveOffline: 'Save Offline',
-    upload: 'Upload',
     cameraPermission: 'Camera permission required',
     grantPermission: 'Grant Permission',
     requestingPermission: 'Requesting permission...',
@@ -107,7 +105,7 @@ const STRINGS = {
     hashLabel: 'Integrity Hash',
     latitudeLabel: 'Latitude',
     longitudeLabel: 'Longitude',
-    shareEvidence: 'Share / Save to Cloud',
+    shareEvidence: 'Export (Files, Photos…)',
     noEvidenceFound: 'No evidence has been saved yet.',
     openEvidenceVault: 'Open Evidence Vault',
     recordingSaved: 'Recording saved to local vault!',
@@ -127,6 +125,20 @@ const STRINGS = {
     integrityModified: 'Changed: the file or its metadata no longer matches the seal.',
     integrityUnverifiable: 'Cannot verify: the file is missing or was recorded without a seal.',
 
+    // Recording
+    gpsLocating: 'Locating…',
+    gpsDenied: 'Location permission denied',
+    witnessesPlaceholder: 'Witness names or phone numbers',
+    savedToPhone: 'Each recording is saved on this phone and sealed. Export it or back it up from the vault.',
+
+    // Hub backup
+    backupToHub: 'Back up to Adhikar hub',
+    backingUp: 'Uploading…',
+    backupDone: 'Backed up. The hub re-hashed the file and it matches.',
+    backupMismatch: 'Uploaded, but the hub hash does NOT match this recording.',
+    backupFailed: 'Could not reach the Adhikar hub.',
+    backupNeedsSeal: 'Only sealed recordings can be backed up.',
+    backedUpAt: 'Backed up',
 
     // Law packs
     packsTitle: 'Law packs',
@@ -187,8 +199,6 @@ const STRINGS = {
     hashVerified: 'সেভ করার সময় SHA-256 দিয়ে সিল করা হয়',
     recordBtn: 'রেকর্ড',
     stopBtn: 'বন্ধ',
-    saveOffline: 'অফলাইন সেভ',
-    upload: 'আপলোড',
     cameraPermission: 'ক্যামেরা অনুমতি প্রয়োজন',
     grantPermission: 'অনুমতি দিন',
     requestingPermission: 'অনুমতি চাওয়া হচ্ছে...',
@@ -253,7 +263,7 @@ const STRINGS = {
     hashLabel: 'অখণ্ডতা হ্যাশ',
     latitudeLabel: 'অক্ষাংশ',
     longitudeLabel: 'দ্রাঘিমাংশ',
-    shareEvidence: 'শেয়ার / ক্লাউডে সেভ করুন',
+    shareEvidence: 'রপ্তানি (ফাইল, ফটো…)',
     noEvidenceFound: 'এখনো কোনো প্রমাণ সংরক্ষণ করা হয়নি।',
     openEvidenceVault: 'প্রমাণ ভল্ট খুলুন',
     recordingSaved: 'রেকর্ডিং স্থানীয় ভল্টে সেভ করা হয়েছে!',
@@ -273,6 +283,20 @@ const STRINGS = {
     integrityModified: 'পরিবর্তিত: ফাইল বা এর তথ্য আর সিলের সাথে মিলছে না।',
     integrityUnverifiable: 'যাচাই করা যাচ্ছে না: ফাইলটি নেই অথবা সিল ছাড়া রেকর্ড করা হয়েছিল।',
 
+    // Recording
+    gpsLocating: 'অবস্থান খোঁজা হচ্ছে…',
+    gpsDenied: 'অবস্থানের অনুমতি দেওয়া হয়নি',
+    witnessesPlaceholder: 'সাক্ষীর নাম বা ফোন নম্বর',
+    savedToPhone: 'প্রতিটি রেকর্ডিং এই ফোনে সংরক্ষিত ও সিল করা হয়। ভল্ট থেকে রপ্তানি বা ব্যাকআপ করুন।',
+
+    // Hub backup
+    backupToHub: 'অধিকার হাবে ব্যাকআপ',
+    backingUp: 'আপলোড হচ্ছে…',
+    backupDone: 'ব্যাকআপ সম্পন্ন। হাব ফাইলটি আবার হ্যাশ করেছে এবং মিলেছে।',
+    backupMismatch: 'আপলোড হয়েছে, কিন্তু হাবের হ্যাশ এই রেকর্ডিংয়ের সাথে মেলেনি।',
+    backupFailed: 'অধিকার হাবে পৌঁছানো যায়নি।',
+    backupNeedsSeal: 'শুধু সিল করা রেকর্ডিং ব্যাকআপ করা যায়।',
+    backedUpAt: 'ব্যাকআপ',
 
     // Law packs
     packsTitle: 'আইন প্যাক',
