@@ -1,4 +1,18 @@
 {
+ "dowry_bn": {
+  "sections": 11,
+  "source": "wayback:20240621233321",
+  "id": 1256,
+  "lang": "bn",
+  "name": "যৌতুক নিরোধ আইন, ২০১৮"
+ },
+ "cyber_suraksha_2026_bn": {
+  "sections": 51,
+  "source": "wayback:20261002012212",
+  "id": 1710,
+  "lang": "bn",
+  "name": "সাইবার সুরক্ষা আইন, ২০২৬"
+ },
  "constitution_en": {
   "sections": 167,
   "source": "wayback:20260921062027",
@@ -15,49 +29,49 @@
  },
  "crpc_en": {
   "sections": 510,
-  "source": "cache",
+  "source": "wayback:20260925100059",
   "id": 75,
   "lang": "en",
   "name": "The Code of Criminal Procedure, 1898"
  },
  "police_act_en": {
   "sections": 52,
-  "source": "cache",
+  "source": "wayback:20260611035026",
   "id": 12,
   "lang": "en",
   "name": "The Police Act, 1861"
  },
  "evidence_en": {
   "sections": 182,
-  "source": "cache",
+  "source": "wayback:20251213171719",
   "id": 24,
   "lang": "en",
   "name": "The Evidence Act, 1872"
  },
  "evidence_amend_2022_en": {
   "sections": 21,
-  "source": "cache",
+  "source": "wayback:20261009082752",
   "id": 1416,
   "lang": "en",
   "name": "Evidence (Amendment) Act, 2022"
  },
  "rti_bn": {
   "sections": 37,
-  "source": "cache",
+  "source": "wayback:20260516060408",
   "id": 1011,
   "lang": "bn",
   "name": "তথ্য অধিকার আইন, ২০০৯"
  },
  "legal_aid_bn": {
   "sections": 39,
-  "source": "cache",
+  "source": "wayback:20260616095125",
   "id": 834,
   "lang": "bn",
   "name": "আইনগত সহায়তা প্রদান আইন, ২০০০"
  },
  "ict_bn": {
   "sections": 85,
-  "source": "cache",
+  "source": "wayback:20260513013335",
   "id": 950,
   "lang": "bn",
   "name": "তথ্য ও যোগাযোগ প্রযুক্তি আইন, ২০০৬"

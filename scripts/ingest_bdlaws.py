@@ -164,8 +164,10 @@ def main():
 
     with ThreadPoolExecutor(max_workers=4) as ex:
         res = [r for r in ex.map(safe, args.acts) if r]
-    manifest = {k: dict(sections=n, source=s, **{f: ACTS[k][f] for f in ("id", "lang", "name")}) for k, n, s in res}
-    (STRUCT / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
+    path = STRUCT / "manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    manifest.update({k: dict(sections=n, source=s, **{f: ACTS[k][f] for f in ("id", "lang", "name")}) for k, n, s in res})
+    path.write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":
