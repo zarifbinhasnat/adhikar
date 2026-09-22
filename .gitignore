@@ -53,3 +53,6 @@ docs/report/build/
 
 # Hub runtime data (uploaded evidence)
 server/data/
+
+# Built search index (rag/build_index.py)
+rag/index/
