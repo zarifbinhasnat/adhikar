@@ -55,7 +55,8 @@ def chunks():
                 continue
             pieces = split_long(s["text"])
             for i, piece in enumerate(pieces):
-                header = f"[{s['act_name']} › {s['part']} › {s['section_label']} — {s['title']}]".replace(" ›  ›", " ›")
+                cite = citation(s["act_key"], s["section_label"])
+                header = f"[{cite} | {s['act_name']} › {s['part']} › {s['section_label']} — {s['title']}]".replace(" ›  ›", " ›")
                 yield {
                     "id": f"{s['id']}#{i}" if len(pieces) > 1 else s["id"],
                     "section_id": s["id"],
@@ -64,7 +65,7 @@ def chunks():
                     "lang": s["lang"],
                     "label": s["section_label"],
                     "title": s["title"],
-                    "cite": citation(s["act_key"], s["section_label"]),
+                    "cite": cite,
                     "source_url": s["source_url"],
                     "header": header,
                     "text": piece,
