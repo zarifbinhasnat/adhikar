@@ -1,0 +1,329 @@
+[
+  {
+    "id": "officer-identity",
+    "questions": [
+      "Police officer won't tell me his name",
+      "Does the police officer have to show ID when arresting me?",
+      "পুলিশ কি পরিচয়পত্র দেখাতে বাধ্য?",
+      "গ্রেপ্তারের সময় পুলিশ নাম বলছে না",
+      "police ki ID card dekhate badhho?",
+      "police nam bolche na",
+      "Do police need to show their ID?"
+    ],
+    "cites": [
+      "crpc_en-s46A"
+    ],
+    "en": "Yes. An officer making an arrest must wear a visible, clear name identification and, if asked, show their identity card to you and to people present [1].\n- The officer must disclose their identity [1].\n- A memorandum of arrest must be prepared, witnessed by a family member or a respectable local resident, and you may sign it [1].",
+    "bn": "হ্যাঁ। গ্রেপ্তারকারী কর্মকর্তাকে স্পষ্টভাবে দৃশ্যমান নাম-পরিচিতি পরতে হবে এবং চাইলে আপনাকে ও উপস্থিত ব্যক্তিদের পরিচয়পত্র দেখাতে হবে [1]।\n- কর্মকর্তাকে নিজের পরিচয় প্রকাশ করতে হবে [1]।\n- গ্রেপ্তারের একটি স্মারক তৈরি করতে হবে, যাতে পরিবারের একজন সদস্য বা এলাকার একজন সম্মানিত বাসিন্দা সাক্ষী থাকবেন; আপনি তাতে স্বাক্ষর করতে পারেন [1]।",
+    "require": [
+      [
+        "name",
+        "nam ",
+        "nam?",
+        "id",
+        "identity",
+        "identification",
+        "badge",
+        "পরিচয়",
+        "নাম"
+      ]
+    ]
+  },
+  {
+    "id": "reason-for-arrest",
+    "questions": [
+      "Do they have to tell me why I am arrested?",
+      "Police arrested me without saying why",
+      "গ্রেপ্তারের কারণ জানানো কি বাধ্যতামূলক?",
+      "কেন গ্রেফতার করা হচ্ছে বলছে না",
+      "keno arrest korse bolche na",
+      "police arrest korche kintu karon bolche na",
+      "Why was I arrested, they must tell me?"
+    ],
+    "cites": [
+      "crpc_en-s54A",
+      "constitution_en-s33"
+    ],
+    "en": "Yes. A police officer arresting without a warrant must tell you the reasons for the arrest at the time of arrest [1].\n- Anyone arrested must be informed of the grounds as soon as possible [2].\n- You may not be denied the right to consult, and be defended by, a lawyer of your choice [2].",
+    "bn": "হ্যাঁ। ওয়ারেন্ট ছাড়া গ্রেপ্তারকারী পুলিশ কর্মকর্তাকে গ্রেপ্তারের সময়ই কারণ জানাতে হবে [1]।\n- গ্রেপ্তারকৃত যেকোনো ব্যক্তিকে যথাসম্ভব শীঘ্র গ্রেপ্তারের কারণ জানাতে হবে [2]।\n- পছন্দের আইনজীবীর সাথে পরামর্শ ও তাঁর মাধ্যমে আত্মপক্ষ সমর্থনের অধিকার থেকে আপনাকে বঞ্চিত করা যাবে না [2]।",
+    "require": [
+      [
+        "arrest",
+        "গ্রেফতার",
+        "গ্রেপ্তার",
+        "dhor",
+        "ধর",
+        "atok",
+        "আটক",
+        "giraftar"
+      ],
+      [
+        "why",
+        "reason",
+        "karon",
+        "কারণ",
+        "keno",
+        "কেন"
+      ]
+    ]
+  },
+  {
+    "id": "arrest-without-warrant",
+    "questions": [
+      "Can police arrest me without a warrant?",
+      "পুলিশ কি ওয়ারেন্ট ছাড়া গ্রেফতার করতে পারে?",
+      "ওয়ারেন্ট ছাড়া গ্রেপ্তার কখন করা যায়?",
+      "police ki warrant chara arrest korte pare?"
+    ],
+    "cites": [
+      "crpc_en-s54",
+      "crpc_en-s54A"
+    ],
+    "en": "Only in the situations listed in CrPC section 54, for example when a cognizable offence is committed in front of the officer [1].\n- For offences punishable by up to seven years, the officer needs a reasonable complaint, credible information or reasonable suspicion, must believe the arrest is necessary for a listed reason, and must record the reasons in writing [1].\n- Police may not use this power to arrest someone for preventive detention [1].\n- You must be told the reason at the time of arrest [2].",
+    "bn": "শুধু ফৌজদারী কার্যবিধির ধারা ৫৪-এ বর্ণিত পরিস্থিতিতে, যেমন কর্মকর্তার সামনে আমলযোগ্য অপরাধ সংঘটিত হলে [1]।\n- সাত বছর পর্যন্ত দণ্ডনীয় অপরাধের ক্ষেত্রে যুক্তিসঙ্গত অভিযোগ, বিশ্বাসযোগ্য তথ্য বা যুক্তিসঙ্গত সন্দেহ থাকতে হবে, নির্দিষ্ট কারণে গ্রেপ্তার প্রয়োজন বলে কর্মকর্তাকে সন্তুষ্ট হতে হবে এবং লিখিতভাবে কারণ লিপিবদ্ধ করতে হবে [1]।\n- নিবর্তনমূলক আটকের উদ্দেশ্যে এই ধারায় গ্রেপ্তার করা যাবে না [1]।\n- গ্রেপ্তারের সময়ই আপনাকে কারণ জানাতে হবে [2]।",
+    "require": [
+      [
+        "arrest",
+        "গ্রেফতার",
+        "গ্রেপ্তার",
+        "dhor",
+        "ধর",
+        "atok",
+        "আটক",
+        "giraftar"
+      ],
+      [
+        "warrant",
+        "ওয়ারেন্ট",
+        "oyarent"
+      ]
+    ]
+  },
+  {
+    "id": "24-hours",
+    "questions": [
+      "How long can police keep me after arrest?",
+      "How many hours can police detain me?",
+      "পুলিশ কতক্ষণ আটক রাখতে পারে?",
+      "গ্রেপ্তারের পর কত ঘণ্টার মধ্যে ম্যাজিস্ট্রেটের কাছে নিতে হবে?",
+      "police amake dhore nie gese, koto ghonta rakhte pare?",
+      "koto ghonta police rakhte pare",
+      "how long can I be held in police custody",
+      "গ্রেপ্তারের পর কতক্ষণ থানায় রাখতে পারে?"
+    ],
+    "cites": [
+      "constitution_en-s33",
+      "crpc_en-s61"
+    ],
+    "en": "You must be produced before the nearest magistrate within 24 hours of arrest, not counting travel time, and you cannot be kept in custody beyond that without a magistrate's order [1].\n- Police may not detain a person arrested without warrant for more than 24 hours without a special order of a magistrate [2].\n- These safeguards do not apply to someone held under a preventive-detention law [1].",
+    "bn": "গ্রেপ্তারের ২৪ ঘণ্টার মধ্যে (যাতায়াতের সময় বাদে) নিকটতম ম্যাজিস্ট্রেটের সামনে হাজির করতে হবে, এবং ম্যাজিস্ট্রেটের আদেশ ছাড়া এর বেশি আটক রাখা যাবে না [1]।\n- ওয়ারেন্ট ছাড়া গ্রেপ্তার করা ব্যক্তিকে ম্যাজিস্ট্রেটের বিশেষ আদেশ ছাড়া পুলিশ ২৪ ঘণ্টার বেশি আটক রাখতে পারবে না [2]।\n- নিবর্তনমূলক আটক আইনে আটক ব্যক্তির ক্ষেত্রে এই রক্ষাকবচ প্রযোজ্য নয় [1]।",
+    "require": [
+      [
+        "hour",
+        "ghonta",
+        "ঘণ্টা",
+        "ঘন্টা",
+        "how long",
+        "koto",
+        "কতক্ষণ",
+        "কত",
+        "held",
+        "detain",
+        "rakh",
+        "রাখ",
+        "custody"
+      ]
+    ]
+  },
+  {
+    "id": "family-notice",
+    "questions": [
+      "Will my family be told if I am arrested?",
+      "Police took my brother, how do I find where he is?",
+      "গ্রেপ্তারের খবর কি পরিবারকে জানাতে হবে?",
+      "ভাইকে পুলিশ ধরে নিয়ে গেছে, কোথায় রেখেছে জানব কীভাবে?",
+      "family ke janate hobe ki?",
+      "ami arrested, family ke janabe?",
+      "Will police inform my family about my arrest?",
+      "পরিবারকে কি গ্রেপ্তারের খবর দেবে?"
+    ],
+    "cites": [
+      "crpc_en-s46A",
+      "crpc_en-s46B"
+    ],
+    "en": "If someone is arrested away from home, police must inform a family member, relative or friend they name, within 24 hours, of the time and place of arrest and where they are held [1].\n- Every arrest must be entered in the police station's general diary [2].\n- The officer keeping that record must give information about the arrest to a relative, friend or neighbour who asks [2].",
+    "bn": "বাড়ির বাইরে থেকে গ্রেপ্তার হলে ২৪ ঘণ্টার মধ্যে তাঁর মনোনীত পরিবারের সদস্য, আত্মীয় বা বন্ধুকে গ্রেপ্তারের সময়, স্থান ও আটক রাখার জায়গা জানাতে হবে [1]।\n- প্রতিটি গ্রেপ্তার থানার সাধারণ ডায়েরিতে লিপিবদ্ধ করতে হবে [2]।\n- আত্মীয়, বন্ধু বা প্রতিবেশী চাইলে রেকর্ড রক্ষাকারী কর্মকর্তা গ্রেপ্তার সম্পর্কিত তথ্য দিতে বাধ্য [2]।",
+    "require": [
+      [
+        "family",
+        "পরিবার",
+        "relative",
+        "আত্মীয়",
+        "where",
+        "কোথায়",
+        "brother",
+        "ভাই",
+        "son",
+        "husband",
+        "janabe",
+        "jante",
+        "inform"
+      ]
+    ]
+  },
+  {
+    "id": "torture",
+    "questions": [
+      "Can police beat me in custody?",
+      "Police tortured me, what can I do?",
+      "পুলিশ কি হেফাজতে মারধর করতে পারে?",
+      "থানায় নির্যাতন করলে কী করব?",
+      "police thanay marle ki korbo?",
+      "Police beat my son at the station",
+      "police hit me during interrogation",
+      "থানায় পুলিশ মারধর করেছে",
+      "police mere felche thanay"
+    ],
+    "cites": [
+      "constitution_en-s35",
+      "torture_custodial_bn-s13",
+      "torture_custodial_bn-s4",
+      "torture_custodial_bn-s12"
+    ],
+    "en": "No. No one may be subjected to torture or to cruel, inhuman or degrading punishment or treatment [1].\n- Torturing a person is a criminal offence [2].\n- If you tell a court you were tortured, it must record your statement immediately and order a medical examination; a woman is examined by a registered female doctor [3].\n- Following a superior's order is not an accepted excuse [4].",
+    "bn": "না। কাউকে নির্যাতন বা নিষ্ঠুর, অমানুষিক বা লাঞ্ছনাকর দণ্ড বা আচরণ করা যাবে না [1]।\n- কাউকে নির্যাতন করা একটি অপরাধ [2]।\n- আদালতে নির্যাতনের অভিযোগ করলে আদালত তাৎক্ষণিকভাবে আপনার বিবৃতি লিপিবদ্ধ করবেন এবং চিকিৎসক দিয়ে দেহ পরীক্ষার আদেশ দেবেন; নারী হলে রেজিস্টার্ড নারী চিকিৎসক পরীক্ষা করবেন [3]।\n- ঊর্ধ্বতন কর্মকর্তার আদেশের অজুহাত গ্রহণযোগ্য নয় [4]।",
+    "require": [
+      [
+        "beat",
+        "hit",
+        "tortur",
+        "মার",
+        "নির্যাতন",
+        "mere",
+        "marle",
+        "peta",
+        "পেটা"
+      ]
+    ]
+  },
+  {
+    "id": "confession",
+    "questions": [
+      "Can I be forced to confess?",
+      "Is a confession to the police valid?",
+      "পুলিশ কি জোর করে স্বীকারোক্তি নিতে পারে?",
+      "পুলিশের কাছে দেওয়া স্বীকারোক্তি কি প্রমাণ হিসেবে গণ্য?",
+      "jor kore shikarokti nite pare?",
+      "police force me to sign a confession",
+      "পুলিশ জোর করে জবানবন্দিতে সই করাচ্ছে"
+    ],
+    "cites": [
+      "constitution_en-s35",
+      "evidence_en-s25",
+      "evidence_en-s26",
+      "evidence_en-s24"
+    ],
+    "en": "No one accused of an offence can be compelled to be a witness against themselves [1].\n- A confession made to a police officer cannot be proved against the accused [2].\n- A confession made in police custody cannot be proved unless made in the immediate presence of a magistrate [3].\n- A confession caused by an inducement, threat or promise from a person in authority is irrelevant in a criminal case [4].",
+    "bn": "অপরাধে অভিযুক্ত কাউকে নিজের বিরুদ্ধে সাক্ষ্য দিতে বাধ্য করা যাবে না [1]।\n- পুলিশ কর্মকর্তার কাছে দেওয়া স্বীকারোক্তি অভিযুক্তের বিরুদ্ধে প্রমাণ হিসেবে ব্যবহার করা যাবে না [2]।\n- পুলিশ হেফাজতে থাকা অবস্থায় দেওয়া স্বীকারোক্তি ম্যাজিস্ট্রেটের সরাসরি উপস্থিতিতে না হলে প্রমাণ করা যাবে না [3]।\n- কর্তৃপক্ষের প্রলোভন, হুমকি বা প্রতিশ্রুতির কারণে দেওয়া স্বীকারোক্তি ফৌজদারি মামলায় অপ্রাসঙ্গিক [4]।",
+    "require": [
+      [
+        "confess",
+        "স্বীকারোক্তি",
+        "shikar",
+        "জবানবন্দি",
+        "sign"
+      ]
+    ]
+  },
+  {
+    "id": "medical-exam",
+    "questions": [
+      "I was injured during arrest, do I get a doctor?",
+      "Who examines a woman after arrest?",
+      "গ্রেপ্তারের সময় আহত হলে কি চিকিৎসা পাব?",
+      "নারী আসামিকে কে পরীক্ষা করবে?"
+    ],
+    "cites": [
+      "crpc_en-s46E"
+    ],
+    "en": "Yes. An arrested person who appears sick or injured must be examined and given first aid by a government medical officer, or a registered practitioner if none is available [1].\n- A woman's body is examined, where practicable, by or under a female doctor, or with a female nurse or attendant present [1].\n- A certificate of the examination must be given to the police and to you or someone you name [1].",
+    "bn": "হ্যাঁ। গ্রেপ্তারকৃত ব্যক্তি অসুস্থ বা আহত মনে হলে সরকারি হাসপাতালের মেডিক্যাল অফিসার, না থাকলে রেজিস্টার্ড চিকিৎসক তাঁকে পরীক্ষা করে প্রাথমিক চিকিৎসা দেবেন [1]।\n- নারীর দেহ পরীক্ষা সম্ভব হলে নারী চিকিৎসক দ্বারা বা তাঁর তত্ত্বাবধানে, অথবা নারী নার্স বা পরিচারিকার উপস্থিতিতে হবে [1]।\n- পরীক্ষার সনদ পুলিশকে এবং আপনাকে বা আপনার মনোনীত ব্যক্তিকে দিতে হবে [1]।",
+    "require": [
+      [
+        "doctor",
+        "medical",
+        "injur",
+        "আহত",
+        "চিকিৎস",
+        "পরীক্ষা",
+        "examin",
+        "অসুস্থ",
+        "sick"
+      ]
+    ]
+  },
+  {
+    "id": "rti-apply",
+    "questions": [
+      "How do I file an RTI application?",
+      "How to request information from a government office?",
+      "তথ্য অধিকার আইনে কীভাবে আবেদন করব?",
+      "RTI application kivabe korbo?"
+    ],
+    "cites": [
+      "rti_bn-s8"
+    ],
+    "en": "Apply to the office's Designated Officer in writing, or by e-mail or other electronic means [1].\n- Give your name and address, a precise description of the information, details that help locate it, and how you want to receive it: inspection, copy, notes or another way [1].\n- Use the authority's printed form if it has one; otherwise plain paper with these details is accepted [1].",
+    "bn": "সংশ্লিষ্ট দায়িত্বপ্রাপ্ত কর্মকর্তার কাছে লিখিতভাবে, অথবা ই-মেইল বা অন্য ইলেকট্রনিক মাধ্যমে আবেদন করুন [1]।\n- আপনার নাম-ঠিকানা, চাওয়া তথ্যের নির্ভুল বর্ণনা, তথ্য খুঁজে পেতে সহায়ক বিবরণ এবং কীভাবে তথ্য পেতে চান (পরিদর্শন, অনুলিপি, নোট বা অন্য উপায়) উল্লেখ করুন [1]।\n- কর্তৃপক্ষের মুদ্রিত ফরম থাকলে সেটি ব্যবহার করুন; না থাকলে এসব তথ্যসহ সাদা কাগজেও চলবে [1]।",
+    "require": [
+      [
+        "rti",
+        "information",
+        "তথ্য"
+      ],
+      [
+        "apply",
+        "application",
+        "আবেদন",
+        "request",
+        "file",
+        "korbo",
+        "করব"
+      ]
+    ]
+  },
+  {
+    "id": "rti-deadline",
+    "questions": [
+      "How long does an office have to answer my RTI request?",
+      "RTI deadline",
+      "তথ্য অধিকার আবেদনের উত্তর কত দিনের মধ্যে দিতে হবে?",
+      "RTI er uttor koto diner moddhe dite hobe?",
+      "RTI response time limit",
+      "তথ্য দিতে কত দিন সময় পায়?"
+    ],
+    "cites": [
+      "rti_bn-s9",
+      "rti_bn-s24"
+    ],
+    "en": "Within 20 working days, or 30 working days if more than one unit or authority is involved [1].\n- Information about someone's life or death, arrest or release from jail must be given in initial form within 24 hours [1].\n- A refusal must be sent with reasons within 10 working days [1].\n- If you get no answer or disagree, appeal to the Appeal Authority within 30 days [2].",
+    "bn": "২০ কার্যদিবসের মধ্যে; একাধিক ইউনিট বা কর্তৃপক্ষ জড়িত থাকলে ৩০ কার্যদিবসের মধ্যে [1]।\n- কারও জীবন-মৃত্যু, গ্রেপ্তার বা কারাগার থেকে মুক্তি সম্পর্কিত তথ্য হলে ২৪ ঘণ্টার মধ্যে প্রাথমিক তথ্য দিতে হবে [1]।\n- তথ্য দিতে অপারগ হলে ১০ কার্যদিবসের মধ্যে কারণসহ জানাতে হবে [1]।\n- উত্তর না পেলে বা সংক্ষুব্ধ হলে ৩০ দিনের মধ্যে আপিল কর্তৃপক্ষের কাছে আপিল করুন [2]।",
+    "require": [
+      [
+        "rti",
+        "তথ্য",
+        "information"
+      ],
+      [
+        "day",
+        "din",
+        "দিন",
+        "deadline",
+        "time",
+        "long",
+        "সময়",
+        "কত"
+      ]
+    ]
+  }
+]
