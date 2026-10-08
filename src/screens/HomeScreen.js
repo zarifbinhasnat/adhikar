@@ -13,6 +13,7 @@ import RIGHTS_DATA from '../data/rightsData';
 const F = FONTS.family;
 
 const NAV_CARDS = [
+  { key: 'ask',           iconName: 'chatbubbles',       label: 'Ask Adhikar',    route: 'Ask' },
   { key: 'policeStop',    iconName: 'shield-checkmark', label: 'Police stop',    route: null },
   { key: 'record',        iconName: 'mic',               label: 'Record',         route: 'Record' },
   { key: 'myRights',      iconName: 'book',              label: 'My rights',      route: 'Rights' },
@@ -65,6 +66,12 @@ export default function HomeScreen({ navigation }) {
               placeholderTextColor={COLORS.textFaint}
               value={searchQuery}
               onChangeText={setSearchQuery}
+              returnKeyType="search"
+              onSubmitEditing={() => {
+                if (!searchQuery.trim()) return;
+                navigation.navigate('Ask', { question: searchQuery.trim() });
+                setSearchQuery('');
+              }}
             />
           </View>
           <Pressable

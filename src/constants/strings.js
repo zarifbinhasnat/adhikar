@@ -13,6 +13,7 @@ const STRINGS = {
     offlinePacks: 'Law packs on this phone',
 
     // Navigation cards
+    ask: 'Ask Adhikar',
     policeStop: 'Police stop',
     record: 'Record',
     myRights: 'My rights',
@@ -160,6 +161,23 @@ const STRINGS = {
     searchSections: 'Search this pack…',
     sourceLabel: 'Source',
     downloadFailed: 'Download failed',
+
+    // Ask
+    askTitle: 'Ask Adhikar',
+    askIntro: 'Ask in Bangla, English or Banglish. Answers come only from the official law, and run on this laptop, not the cloud.',
+    askPlaceholder: 'Ask about your rights…',
+    askLawLabel: 'The law',
+    askExplanationLabel: 'Explanation (AI, check it against the law above)',
+    askVerified: 'Verified answer',
+    askCitationsChecked: 'Every line cites the law above',
+    askWithheld: 'Adhikar could not write an explanation that cites the law reliably. Read the law above, or call legal aid on 16430.',
+    askSearching: 'Finding the law…',
+    askWriting: 'Writing an explanation…',
+    askEmergencyTitle: 'Call for help now',
+    askAnsweredIn: 'answered in',
+    askLawIn: 'law found in',
+    askHubError: 'Could not reach the Adhikar hub. Check that the laptop is on the same network.',
+    askDisclaimer: 'Legal information, not legal advice. Free legal aid: 16430. Emergency: 999.',
   },
 
   BN: {
@@ -171,6 +189,7 @@ const STRINGS = {
     offlinePacks: 'এই ফোনে থাকা আইন প্যাক',
 
     // Navigation cards
+    ask: 'অধিকারকে জিজ্ঞাসা',
     policeStop: 'পুলিশ স্টপ',
     record: 'রেকর্ড',
     myRights: 'আমার অধিকার',
@@ -318,6 +337,23 @@ const STRINGS = {
     searchSections: 'এই প্যাকে খুঁজুন…',
     sourceLabel: 'উৎস',
     downloadFailed: 'ডাউনলোড ব্যর্থ',
+
+    // Ask
+    askTitle: 'অধিকারকে জিজ্ঞাসা করুন',
+    askIntro: 'বাংলা, ইংরেজি বা বাংলিশে প্রশ্ন করুন। উত্তর আসে শুধু সরকারি আইন থেকে, এবং চলে এই ল্যাপটপে, ক্লাউডে নয়।',
+    askPlaceholder: 'আপনার অধিকার সম্পর্কে প্রশ্ন করুন…',
+    askLawLabel: 'আইন',
+    askExplanationLabel: 'ব্যাখ্যা (এআই, ওপরের আইনের সাথে মিলিয়ে নিন)',
+    askVerified: 'যাচাইকৃত উত্তর',
+    askCitationsChecked: 'প্রতিটি লাইন ওপরের আইন উদ্ধৃত করে',
+    askWithheld: 'নির্ভরযোগ্যভাবে আইন উদ্ধৃত করে ব্যাখ্যা লেখা সম্ভব হয়নি। ওপরের আইনটি পড়ুন, অথবা ১৬৪৩০-এ আইনগত সহায়তার জন্য কল করুন।',
+    askSearching: 'আইন খোঁজা হচ্ছে…',
+    askWriting: 'ব্যাখ্যা লেখা হচ্ছে…',
+    askEmergencyTitle: 'এখনই সাহায্যের জন্য কল করুন',
+    askAnsweredIn: 'উত্তর',
+    askLawIn: 'আইন পাওয়া গেছে',
+    askHubError: 'অধিকার হাবে পৌঁছানো যায়নি। ল্যাপটপ একই নেটওয়ার্কে আছে কি না দেখুন।',
+    askDisclaimer: 'আইনি তথ্য, আইনি পরামর্শ নয়। বিনামূল্যে আইনগত সহায়তা: ১৬৪৩০। জরুরি: ৯৯৯।',
   },
 };
 

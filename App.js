@@ -33,6 +33,7 @@ import EvidenceVaultScreen from './src/screens/EvidenceVaultScreens';
 import EvidenceDetailScreen from './src/screens/EvidenceDetailScreen';
 import OfflinePacksScreen from './src/screens/OfflinePacksScreen';
 import PackReaderScreen from './src/screens/PackReaderScreen';
+import AskScreen from './src/screens/AskScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -124,6 +125,7 @@ export default function App() {
           <Stack.Screen name="EvidenceDetail" component={EvidenceDetailScreen} options={{ title: 'Evidence detail' }} />
           <Stack.Screen name="OfflinePacks"  component={OfflinePacksScreen}  options={{ title: 'Law packs' }} />
           <Stack.Screen name="PackReader"    component={PackReaderScreen}    options={{ title: 'Law pack' }} />
+          <Stack.Screen name="Ask"           component={AskScreen}           options={{ title: 'Ask Adhikar' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </LanguageProvider>
