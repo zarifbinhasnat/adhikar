@@ -59,9 +59,14 @@ def _chat(messages, max_tokens, stream=False, client=None):
 
 async def to_bangla_query(question, client):
     """Most statutes after 1990 exist only in Bangla, so non-Bangla questions get a Bangla search line."""
-    prompt = ("Translate this question about Bangladeshi law into one short Bangla search query using legal "
-              "terms. Output only the Bangla query.\n\nQuestion: " + question)
-    res = await client.post(f"{OLLAMA}/api/chat", json=_chat([{"role": "user", "content": prompt}], 40), timeout=60)
+    prompt = ("Rewrite this question about Bangladeshi law as one Bangla sentence in Bangla script, with correct "
+              "spelling and formal legal words. The question may be English or romanised Bangla (Banglish).\n"
+              "Examples:\n"
+              "police thanay marle ki korbo? -> থানায় পুলিশ নির্যাতন করলে কী করব?\n"
+              "joutuk chaile ki shasti? -> যৌতুক দাবি করলে শাস্তি কী?\n"
+              "Can police search my house? -> পুলিশ কি আমার বাড়ি তল্লাশি করতে পারে?\n"
+              "Output only the Bangla sentence.\n\nQuestion: " + question)
+    res = await client.post(f"{OLLAMA}/api/chat", json=_chat([{"role": "user", "content": prompt}], 90), timeout=60)
     res.raise_for_status()
     return res.json()["message"]["content"].strip().splitlines()[0]
 
