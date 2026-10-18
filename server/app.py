@@ -78,7 +78,15 @@ async def ask(body: Question):
         async with httpx.AsyncClient() as client:
             search_text = question
             if not answer.BANGLA.search(question):
-                search_text = f"{question} {await answer.to_bangla_query(question, client)}"
+                rewrite = await answer.to_bangla_query(question, client)
+                search_text = f"{question} {rewrite}"
+                if lang == "bn":  # Banglish embeds poorly, so give the cards a second chance on the Bangla rewrite
+                    card, score = cards.match(search_text, await run_in_threadpool(index.embed, rewrite))
+                    if card:
+                        yield _event("card", id=card["id"], answer=card[lang],
+                                     sources=[_public(s) for s in cards.sources(card)],
+                                     lang=lang, score=round(score, 3), seconds=elapsed())
+                        return
             sources = await run_in_threadpool(index.search, search_text, 5)
             yield _event("sources", sources=[_public(s) for s in sources], lang=lang, seconds=elapsed())
 
