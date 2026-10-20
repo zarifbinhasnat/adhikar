@@ -388,5 +388,73 @@
     "legal practitioner"
    ]
   ]
+ },
+ {
+  "id": "custodial-death",
+  "questions": [
+   "What is the punishment if someone dies from torture in police custody?",
+   "Police tortured someone to death, what is the sentence?",
+   "নির্যাতনে মৃত্যু হলে নির্যাতনকারীর কী সাজা হবে?",
+   "পুলিশ হেফাজতে মারা গেলে শাস্তি কী?",
+   "police er hate mara gele ki shasti?",
+   "হেফাজতে কারও মৃত্যুর জন্য দায়ীদের সাজা কী?",
+   "What is the sentence for a death in custody?"
+  ],
+  "cites": [
+   "torture_custodial_bn-s15"
+  ],
+  "en": "If a person dies as a result of torture, the torturer is punished with rigorous imprisonment for life at minimum, or a fine of at least one lakh taka, or both [1].\n- The torturer must also pay an additional two lakh taka in compensation to the aggrieved persons [1].\n- For torture that does not cause death, the minimum is five years' rigorous imprisonment or a fine of at least fifty thousand taka, or both, plus twenty-five thousand taka compensation [1].",
+  "bn": "নির্যাতনের ফলে কেউ মৃত্যুবরণ করলে নির্যাতনকারী অন্যূন যাবজ্জীবন সশ্রম কারাদণ্ড অথবা অন্যূন এক লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডিত হবেন [1]।\n- এর অতিরিক্ত দুই লক্ষ টাকা ক্ষতিগ্রস্ত বা সংক্ষুব্ধ ব্যক্তিদের ক্ষতিপূরণ দিতে হবে [1]।\n- মৃত্যু না ঘটলে নির্যাতনের শাস্তি অন্যূন পাঁচ বৎসরের সশ্রম কারাদণ্ড অথবা অন্যূন পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড, এবং অতিরিক্ত পঁচিশ হাজার টাকা ক্ষতিপূরণ [1]।",
+  "require": [
+   [
+    "death",
+    "die",
+    "dies",
+    "died",
+    "মৃত্যু",
+    "মারা",
+    "mara",
+    "mrittu"
+   ]
+  ]
+ },
+ {
+  "id": "rti-appeal",
+  "questions": [
+   "My RTI application was rejected, where do I appeal?",
+   "I did not get information under RTI in time, what next?",
+   "তথ্য না পেলে কোথায় আপিল করব?",
+   "তথ্য অধিকার আবেদন নাকচ হলে কী করব?",
+   "RTI te tottho na dile ki korbo?"
+  ],
+  "cites": [
+   "rti_bn-s24",
+   "rti_bn-s25"
+  ],
+  "en": "If you do not receive the information in time, or you are aggrieved by the officer's decision, you may appeal to the appellate authority within 30 days [1].\n- The appellate authority must decide within 15 days: either direct the officer to provide the information or dismiss the appeal [1].\n- If you are aggrieved by the appeal decision, or get no decision in time, you may complain to the Information Commission within 30 days [2].",
+  "bn": "নির্ধারিত সময়ে তথ্য না পেলে বা দায়িত্বপ্রাপ্ত কর্মকর্তার সিদ্ধান্তে সংক্ষুব্ধ হলে ৩০ দিনের মধ্যে আপীল কর্তৃপক্ষের কাছে আপীল করতে পারবেন [1]।\n- আপীল কর্তৃপক্ষ ১৫ দিনের মধ্যে তথ্য দেওয়ার নির্দেশ দেবেন অথবা আপীল খারিজ করবেন [1]।\n- আপীলের সিদ্ধান্তে সংক্ষুব্ধ হলে বা সময়মতো সিদ্ধান্ত না পেলে ৩০ দিনের মধ্যে তথ্য কমিশনে অভিযোগ করতে পারবেন [2]।",
+  "require": [
+   [
+    "rti",
+    "তথ্য",
+    "tottho",
+    "information"
+   ],
+   [
+    "appeal",
+    "আপীল",
+    "আপিল",
+    "reject",
+    "refus",
+    "নাকচ",
+    "না পেলে",
+    "na dile",
+    "not get",
+    "didn't get",
+    "did not get",
+    "complain",
+    "অভিযোগ"
+   ]
+  ]
  }
 ]
