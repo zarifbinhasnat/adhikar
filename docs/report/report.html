@@ -51,7 +51,7 @@ tr { break-inside: avoid; }
 td.n { text-align: right; font-variant-numeric: tabular-nums; font-family: Manrope; font-weight: 600; }
 .pill { display: inline-block; font: 700 6.8pt Manrope; letter-spacing: .5pt; text-transform: uppercase; padding: .6mm 2mm; border-radius: 10mm; white-space: nowrap; }
 .ok { background: var(--sage1); color: var(--sage9); } .prov { background: var(--ochre1); color: var(--ochre9); border: .4pt solid #E9D2A0; }
-.sup { background: var(--paper2); color: var(--ink5); } .bad { background: var(--coral1); color: #8E3A2C; }
+.sup { background: var(--paper2); color: var(--ink5); } .no { background: var(--paper2); color: var(--ink7); border: .4pt solid #D6CDBE; } .bad { background: var(--coral1); color: #8E3A2C; }
 .lead { font-size: 11.6pt; line-height: 1.55; color: var(--ink7); }
 .callout { border-left: 2.4pt solid var(--clay); background: var(--paper50); padding: 3mm 4.5mm; margin: 3mm 0 5mm; border-radius: 0 2mm 2mm 0; break-inside: avoid; }
 .callout.sage { border-color: var(--sage); } .callout.ochre { border-color: var(--ochre); }
@@ -121,7 +121,7 @@ figcaption b { color: var(--clay7); }
   </div>
   <div class="abstract">
     <h4>Abstract</h4>
-    <p>This report documents, step by step, how the Adhikar legal-information app is being extended with a question-answering system that runs entirely on the presenter's laptop. No question, document or answer leaves the machine. For every engineering step we record what was done, which alternatives were considered, the decision taken and the reasoning behind it, and the risks that remain. The report is a living document. It is regenerated from the repository as work progresses, and decisions still awaiting measurement are marked <span class="pill prov">Provisional</span> until benchmark evidence settles them.</p>
+    <p>This report documents, step by step, how the Adhikar legal-information app was extended with a question-answering system that runs entirely on the presenter's laptop. No question, document or answer leaves the machine. For every engineering step we record what was done, which alternatives were considered, the decision taken and the reasoning behind it, and the risks that remain. The report is regenerated from the repository, so its corpus tables, commit history and evaluation figures are the actual state of the code. Decisions that depended on measurement were settled by the benchmark in Section 9.</p>
   </div>
   <div class="foot"><span>Prepared for the Adhikar project presentation</span><span>Legal information, not legal advice</span></div>
 </div>
@@ -265,7 +265,7 @@ figcaption b { color: var(--clay7); }
     <text x="340" y="258" font-size="10" fill="#5C5346">FastAPI · POST /ask</text>
     <text x="340" y="275" font-size="10" fill="#5C5346">guardrails · citation check</text>
     <text x="340" y="292" font-size="10" fill="#5C5346">streams tokens (SSE)</text>
-    <text x="340" y="312" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">:8000</text>
+    <text x="340" y="312" font-size="9.5" font-family="Menlo, monospace" fill="#7B7160">:8787</text>
 
     <!-- Retrieval -->
     <g filter="url(#sh)"><rect x="548" y="214" width="196" height="112" rx="14" fill="#FFFFFF" stroke="#E1D8C7"/></g>
@@ -568,8 +568,8 @@ figcaption b { color: var(--clay7); }
   <table>
     <tr><th style="width:24%">Stage</th><th>Purpose</th><th style="width:30%">Failure it prevents</th></tr>
     <tr><td>Emergency pre-check</td><td>Keyword rules (e.g. "beating me", <span class="bn">মারছে</span>, "taken away now") return 999 and 16430 instantly.</td><td>A person in danger waiting for a slow model to answer.</td></tr>
-    <tr><td>Verified answer cards</td><td>About 30 of the most likely questions are answered from text reviewed against the statute in advance.</td><td>Model error on exactly the questions the audience is most likely to ask.</td></tr>
-    <tr><td>Query rewrite</td><td>Romanised Bangla is converted to Bangla script and made self-contained using the conversation so far.</td><td>Banglish queries matching no keywords; follow-up questions ("what about women?") losing context.</td></tr>
+    <tr><td>Verified answer cards</td><td>Fourteen high-risk topics (arrest, detention, lawyer, search, torture, custodial death, confession, medical examination, RTI requests and appeals) are answered from text reviewed against the statute in advance. A card is used only when the question is semantically close (cosine ≥ 0.85) <i>and</i> mentions the card's topic words.</td><td>Model error on exactly the questions the audience is most likely to ask.</td></tr>
+    <tr><td>Query rewrite</td><td>English and romanised Bangla questions are rewritten as a Bangla sentence (most post-1990 acts exist only in Bangla). For Banglish, the answer cards are tried again on the rewrite.</td><td>Banglish queries matching no keywords; follow-up questions ("what about women?") losing context.</td></tr>
     <tr><td>Hybrid retrieval + RRF</td><td>Dense vectors capture meaning across languages; BM25 captures exact terms and section numbers. Rank fusion combines them without score calibration.</td><td>Either method alone missing a relevant section.</td></tr>
     <tr><td>Bilingual context</td><td>Where both language versions exist (currently the Constitution), both are given to the model.</td><td>The 8B model misreading Bangla legal register it has seen less often.</td></tr>
     <tr><td>Citation validation</td><td>Every section the model cites must be among the retrieved sections; otherwise the answer is withheld.</td><td>Invented or mis-numbered citations, the most dangerous failure in legal Q&amp;A.</td></tr>
@@ -592,10 +592,10 @@ figcaption b { color: var(--clay7); }
   {{REVIEW_STATUS}}
 
   <!-- ============================== 9 ============================== -->
-  <h2 style="margin-top:8mm"><span class="num">9</span>Evaluation plan</h2>
+  <h2 style="margin-top:8mm"><span class="num">9</span>Evaluation</h2>
   <p>Model choice and retrieval settings are decided by measurement on a fixed question set, not by impression.</p>
   <table>
-    <tr><th style="width:26%">Measure</th><th>Method</th><th style="width:22%">Target</th></tr>
+    <tr><th style="width:24%">Measure</th><th>Method</th><th style="width:18%">Target set on Day 1</th></tr>
     <tr><td>Generation speed</td><td>Tokens per second and time-to-first-token on the M4, with models warm, on a 6-section prompt.</td><td>First token &lt; 3 s; ≥ 15 tok/s</td></tr>
     <tr><td>Retrieval recall@6</td><td>About 50 questions (Bangla, English, Banglish), each labelled with the section(s) that answer it.</td><td>≥ 0.85 on P0 topics</td></tr>
     <tr><td>Citation validity</td><td>Share of answers whose every citation is in the retrieved set and supports the claim.</td><td>100% after validation filter</td></tr>
@@ -653,7 +653,7 @@ figcaption b { color: var(--clay7); }
       <text x="300" y="18">Day 1 · 22 Oct</text><text x="440" y="18">Day 2 · 23 Oct</text><text x="580" y="18">Day 3 · 24 Oct</text><text x="720" y="18">Day 4 · 25 Oct</text><text x="860" y="18">Day 5 · 26 Oct</text>
     </g>
     <g stroke="#EDE6DA" stroke-width="1.5"><line x1="230" y1="28" x2="230" y2="290"/><line x1="370" y1="28" x2="370" y2="290"/><line x1="510" y1="28" x2="510" y2="290"/><line x1="650" y1="28" x2="650" y2="290"/><line x1="790" y1="28" x2="790" y2="290"/><line x1="930" y1="28" x2="930" y2="290"/></g>
-    <rect x="230" y="28" width="140" height="262" fill="#F5E2D6" opacity=".45"/>
+    
     <g font-size="10.5" fill="#1F1B16" font-weight="600">
       <text x="0" y="56">Models + benchmark</text><text x="0" y="90">Corpus fetch &amp; parse</text><text x="0" y="124">Corpus review</text><text x="0" y="158">Index + retrieval eval</text><text x="0" y="192">Answer cards</text><text x="0" y="226">API /ask</text><text x="0" y="260">App Ask screen + iPhone</text><text x="0" y="288">Rehearsal &amp; recording</text>
     </g>
@@ -672,15 +672,14 @@ figcaption b { color: var(--clay7); }
       <text x="0" y="40" text-anchor="middle" font-size="10" font-weight="700" fill="#8E3A2C">27 Oct</text>
       <text x="0" y="54" text-anchor="middle" font-size="9" fill="#8E3A2C">present</text>
     </g>
-    <text x="300" y="300" text-anchor="middle" font-size="8.5" font-weight="700" fill="#9C4126" letter-spacing="1">TODAY</text>
   </svg>
   <figcaption><b>Figure 5. Five-day plan.</b> Day 5 is reserved for rehearsal only. Nothing new is added on the last day, because untested changes are the most likely cause of a failed live demonstration.</figcaption>
   </figure>
   <h3>11.1 Scope gates</h3>
-  <p>Components that are not essential are included only if a measurement justifies them:</p>
+  <p>Components that were not essential were included only if a measurement justified them. Outcome:</p>
   <ul>
-    <li>The <b>Gemma-3-12B</b> comparison runs only if Qwen3-8B's Bangla is judged inadequate.</li>
-    <li>The <b>bge-reranker-v2-m3</b> reranker is added only if retrieval recall@6 falls below target.</li>
+    <li><b>Gemma-3-12B</b> comparison: not triggered, because Qwen3-8B's Bangla answers were adequate (D4).</li>
+    <li><b>bge-reranker-v2-m3</b>: not added, because recall@5 of 90% met the target (D6).</li>
     <li><b>Voice input</b> and <b>P2 acts</b> are deferred beyond the presentation.</li>
   </ul>
 

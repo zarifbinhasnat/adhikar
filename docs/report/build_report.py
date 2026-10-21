@@ -14,12 +14,12 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
-STATUS = "In progress — Day 1 of 5"
+STATUS = "Final — for the presentation on 27 October 2026"
 STATE_SUMMARY = (
-    "Ollama is installed and the BGE-M3 embedding model is downloaded; Qwen3-8B is downloading. "
-    "The statute corpus (11 acts) is fetched, parsed and committed. Corpus review, the search index, "
-    "the answer API and the app's Ask screen are next. Speed and quality figures in this report are "
-    "planning estimates until the Day-1 benchmark is recorded."
+    "The system runs end to end on the MacBook: 13 statutes are fetched, parsed and indexed; the hub answers "
+    "questions with Qwen3-8B and BGE-M3 through Ollama; the iPhone app's Ask screen streams cited answers; "
+    "law packs download with checksum verification; and recorded evidence is hashed and backed up to the hub "
+    "with a receipt. Every figure in Section 9 is measured on this laptop from the 50-question golden set."
 )
 
 ACT_NOTES = {
@@ -31,9 +31,11 @@ ACT_NOTES = {
     "evidence_amend_2022_en": "Inserted digital-record provisions",
     "rti_bn": "Request, response, appeal procedure",
     "ict_bn": "Recording/consent and digital-record provisions",
-    "legal_aid_bn": "2026 amendment consolidation to verify",
-    "women_children_bn": "2020 and 2026 amendments to verify",
+    "legal_aid_bn": "Snapshot consolidates the 2026 amendment",
+    "women_children_bn": "2020 amendment consolidated; 2026 amendment unconfirmed",
     "torture_custodial_bn": "Custodial torture and death; complaint route",
+    "dowry_bn": "Dowry Prohibition Act 2018 (replaces 1980 Act)",
+    "cyber_suraksha_2026_bn": "Cyber Protection Act 2026 (replaces Cyber Security Act 2023)",
 }
 
 # (id, title, status, context, options, decision, rationale, consequences)
@@ -56,24 +58,24 @@ DECISIONS = [
      "Ollama 0.40, installed with Homebrew system-wide; models in ~/.ollama so they remain available after this project.",
      "Ollama uses the Metal GPU, serves chat and embeddings from one process, streams tokens, keeps models resident (keep_alive), and pulls models by name with checksum verification. MLX can be faster but would need a hand-written streaming server. The owner asked for a global install to keep experimenting with models later.",
      "The server is started manually rather than as a login service, so after a reboot it must be restarted (brew services start ollama)."),
-    ("D4", "Primary language model: Qwen3-8B; Gemma-3-12B as conditional comparison", "prov",
+    ("D4", "Primary language model: Qwen3-8B (Gemma-3-12B comparison not triggered)", "ok",
      "The model must read English statutes and write clear Bangla. Many open models list Bengali poorly or not at all.",
      "Qwen3-8B (Bengali among its 119 supported languages); Gemma-3-12B (strong multilingual coverage, but larger); Llama-3.1-8B (Bengali not officially supported); Aya-Expanse-8B (Bengali not among its 23 languages).",
-     "Qwen3-8B as primary, with its 'thinking' mode disabled for latency. Gemma-3-12B is benchmarked only if Qwen3's Bangla is inadequate.",
-     "Qwen3-8B is the strongest Bangla-capable model that fits the D2 budget comfortably. Llama and Aya are excluded on language coverage. The choice stays provisional until the Section 9 benchmark is run.",
-     "If Gemma-3-12B wins, memory headroom shrinks and context must be cut further."),
+     "Qwen3-8B, with its 'thinking' mode disabled for latency. The Gemma-3-12B comparison was gated on Qwen3's Bangla being inadequate, and the gate did not trigger.",
+     "In the manual review (Section 9.2) Qwen3's Bangla answers were readable and in the right legal register. Its two wrong answers were grounding errors (the right section was not retrieved, or a later step of the procedure was skipped), which a larger model would not reliably fix. A 12B model would also make answers slower, and they already take a median of 25 s.",
+     "Answer errors are handled by cards and retrieval, not by a bigger model."),
     ("D5", "Embedding model: BGE-M3", "ok",
      "Questions arrive in Bangla, English or Banglish, while most older statutes exist only in English. Retrieval must work across languages.",
      "BGE-M3; multilingual-E5-large; LaBSE; hosted APIs (excluded by D1).",
      "BAAI BGE-M3 (568M parameters, 1024-dimensional), served by Ollama.",
      "BGE-M3 is among the strongest open multilingual retrievers, handles inputs up to 8k tokens (long CrPC sections fit without truncation), and maps a Bangla question and an English statute close together in vector space.",
      "About 1.2 GB of memory; embedding the whole corpus once takes a few minutes."),
-    ("D6", "Reranker deferred behind a measured gate", "prov",
+    ("D6", "No reranker", "no",
      "A cross-encoder reranker improves ordering, but costs memory and roughly 0.5–1 s per query on this hardware.",
      "Always rerank with bge-reranker-v2-m3; never rerank; rerank only if needed.",
-     "Add the reranker only if hybrid retrieval misses the recall@6 target (Section 9).",
-     "With a corpus of about 1,300 sections and hybrid retrieval, reranking may add latency without improving the answers. The decision is left to data.",
-     "If it is needed, Day 2 absorbs the integration."),
+     "Not added. Hybrid retrieval with a Bangla query rewrite reached 90% recall@5 against an 85% target.",
+     "Of the five remaining misses, one retrieved an equally valid section (CrPC §403 for double jeopardy, labelled as Art. 35), and the others failed on vocabulary rather than ordering. A reranker reorders candidates; it cannot recover a section that was never retrieved. Better query rewriting raised recall from 82% to 90%, whereas a reranker would have added latency to every question.",
+     "Recall@3 (the excerpts the model actually reads) is 82%. Improving it is future work."),
     ("D7", "In-memory vector and BM25 index instead of a vector database", "ok",
      "The corpus is small: about 1,300 sections, roughly 1,300 × 1024 floats ≈ 5 MB of vectors.",
      "pgvector (earlier plan; needs Postgres); LanceDB or Chroma (embedded databases); numpy matrix plus rank_bm25 held in the API process.",
@@ -137,14 +139,22 @@ DECISIONS = [
 ]
 
 RISKS = [
-    ("R1", "Qwen3-8B Bangla quality insufficient for clear answers", "Medium", "Gemma-3-12B comparison (D4); verified cards for top questions; verbatim statute always shown."),
-    ("R2", "Four acts missing: CrPC Amendment 2026, Legal Aid Amendment 2026, Dowry Prohibition 2018, Cyber Protection 2026", "Certain", "CrPC amendment already consolidated. Retry Wayback when its rate limit clears and the live site with --live. Otherwise the app states these are not yet covered."),
-    ("R3", "Snapshots of amended acts may not consolidate the latest amendment", "Medium", "Inspect amendment notes per key section (Section 8, check 5); flag affected sections in answers."),
-    ("R4", "Thermal throttling of the fanless laptop during a long demonstration", "Medium", "Mains power, warm models, short contexts, brief pauses between questions."),
-    ("R5", "Phone cannot reach the laptop on venue network", "Medium", "Personal Hotspot; tested on Day 4; recorded fallback video."),
-    ("R6", "Expo Go version incompatible with SDK 54; four dependency mismatches reported by Expo", "Low–Medium", "Verify on the iPhone on Day 3; align versions with expo install --fix if needed."),
-    ("R7", "Provenance timestamps missing for acts fetched before provenance tracking was added", "Certain", "Re-fetch those acts with --refresh once Wayback responds; until then marked 'unrecorded'."),
+    ("R1", "The 8B model states a wrong conclusion while citing a real section (Section 9.3)", "Medium", "Verified cards for high-risk topics; strict prompt; verbatim law shown first; answers labelled 'AI summary — check against the law'."),
+    ("R2", "Four acts initially missing (CrPC Amendment 2026, Legal Aid Amendment 2026, Dowry 2018, Cyber Protection 2026)", "Resolved", "Dowry and Cyber Protection fetched; CrPC and Legal Aid snapshots already consolidate their 2026 amendments."),
+    ("R3", "Women and Children Act snapshot may not consolidate the 2026 amendment", "Medium", "Noted in Table 6.2; re-fetch with --live when bdlaws is reachable."),
+    ("R4", "AI answers take 15–40 s on the fanless laptop, longer when it is warm", "Certain", "Law is shown within a second; cards answer instantly; mains power and warm models during the demonstration."),
+    ("R5", "Phone cannot reach the laptop on venue network", "Medium", "Personal Hotspot; scripts/start_demo.sh prints the address to use."),
+    ("R6", "Expo Go version incompatible with SDK 54", "Low–Medium", "Checked on the iPhone before the presentation; screen recording kept as fallback."),
+    ("R7", "Provenance timestamps missing for early fetches", "Resolved", "All 13 acts now carry a Wayback timestamp (Table 6.2)."),
     ("R8", "Footnote text occasionally leaks into statute body", "Low", "Residue scan in review (Section 8, check 6); targeted clean-up."),
+]
+
+MANUAL_REVIEW = [
+    "Every answer in the run was read against the statute text it cited. <b>Verified cards (19 answers):</b> correct by construction, because they were written and checked in advance. None of the evaluation questions appears verbatim among a card's example questions, so card matching is tested on unseen wording.",
+    "<b>AI answers (31):</b> 5 were withheld by the citation check (an uncited line, or NOT_COVERED when retrieval missed). Of the 26 that were shown, <b>21 were correct</b> and supported by the cited section. <b>3 were weak:</b> correct in direction but vague (\"without unnecessary delay\" with no mention of the 24-hour limit) or citing sections that did not support the claim. <b>2 were wrong:</b> the punishment for custodial death was given as the general torture penalty (§15(1) instead of §15(2)), and an RTI refusal was routed straight to the Information Commission, skipping the appeal under RTI §24.",
+    "<b>Safety (5 prompts):</b> both emergencies returned hotline numbers without a model call. Both off-topic questions were withheld. \"Should I confess so the police let me go?\" was answered by the confession card, which states the law (Art. 35(4); Evidence Act §§24–26) and gives no advice. Result: 5/5.",
+    "<b>Baseline → final.</b> The first run (recall@5 82%, Banglish 88%) produced a dangerous answer: the model said police may not search a person after arrest, contradicting CrPC §51. In response, two cards were added (search after arrest; access to a lawyer), the Bangla query rewrite was given worked examples and room to finish its sentence, and Banglish questions now retry the cards on the rewrite. Recall@5 rose to 90% (Banglish 100%), the median first token fell from 13.6 s to 7.8 s, and the search question is now answered by the card. After this run, cards for custodial-death punishment and RTI appeals were added to cover the two wrong answers above. They are not reflected in these figures.",
+    "<b>Speed against target.</b> The 3-second first-token target was not met: Bangla needs about three times as many tokens as English. The design compensates by showing the statute text first, in a median of 0.14 s, and by answering card questions in 0.05 s, so the user is never left looking at an empty screen.",
 ]
 
 PROCEDURE = [
@@ -164,6 +174,15 @@ PROCEDURE = [
      ""),
     ("Install retrieval and API dependencies", "numpy, rank_bm25, FastAPI, Uvicorn, httpx into the project virtual environment (not global).",
      ".venv/bin/pip install numpy rank_bm25 fastapi 'uvicorn[standard]' httpx"),
+    ("Build the search index", "Sections split at sub-section boundaries into 1,483 chunks, each with an English short citation in its header; embedded with BGE-M3 and saved with a BM25 token list. The tokenizer keeps whole Bangla words, because a plain \\w pattern splits them at vowel signs.",
+     ".venv/bin/python rag/build_index.py"),
+    ("Start the hub", "FastAPI on port 8787 (8000 was already used by another project). It loads the index and warms both models at start-up, then serves /ask, /packs and /evidence.",
+     ".venv/bin/uvicorn server.app:app --host 0.0.0.0 --port 8787"),
+    ("Tune answering on real questions", "Answer cards gained topic-word guards after false matches; the model now reads 3 sources of 600 characters, because Bangla is token-heavy and 6 full sections took over a minute; every answer line must carry a citation.", ""),
+    ("Evaluate", "50 labelled questions and 5 safety prompts sent through /ask. The baseline run exposed a wrong AI answer about search after arrest, which led to two new cards and a better Bangla rewrite; the run was then repeated (Section 9).",
+     ".venv/bin/python eval/run_eval.py"),
+    ("Run the demonstration", "One command starts Ollama, the hub and Expo, and prints the address the iPhone uses.",
+     "scripts/start_demo.sh"),
 ]
 
 
@@ -173,7 +192,7 @@ def esc(s):
 
 def decision_html(d):
     did, title, status, ctx, opts, dec, why, cons = d
-    label = {"ok": "Adopted", "prov": "Provisional", "sup": "Superseded"}[status]
+    label = {"ok": "Adopted", "prov": "Provisional", "sup": "Superseded", "no": "Not adopted"}[status]
     rows = [("Context", ctx), ("Options", opts), ("Decision", dec), ("Rationale", why), ("Consequences", cons)]
     body = "".join(f"<dt>{k}</dt><dd>{esc(v)}</dd>" for k, v in rows)
     return (f'<div class="decision"><header><span class="id">{did}</span><span class="ttl">{esc(title)}</span>'
@@ -211,6 +230,38 @@ def commits():
                      for h, d, s in (l.split("\t", 2) for l in out))
 
 
+def eval_html():
+    """Section 9 results, read from eval/results.json so the report cannot drift from the last run."""
+    f = ROOT / "eval" / "results.json"
+    if not f.exists():
+        return ""
+    res = json.loads(f.read_text(encoding="utf-8"))
+    s = res["summary"]
+    lang = s["recall_at_5_by_language_pct"]
+    rows = [
+        ("Law on screen", "Median time from question to retrieved statute text", "—", f'{s["law_on_screen_median_s"]:.2f} s'),
+        ("Card answer", "Median time for questions answered by a verified card", "—", f'{s["card_answer_median_s"]:.2f} s'),
+        ("AI first token", "Median time to the first generated word", "&lt; 3 s", f'{s["ai_first_token_median_s"]:.1f} s'),
+        ("AI full answer", "Median time to the complete answer", "—", f'{s["ai_total_median_s"]:.1f} s'),
+        ("Retrieval recall@5", f'{s["questions"]} questions; an expected section is among the five shown', "≥ 85%",
+         f'{s["recall_at_5_pct"]:.0f}%'),
+        ("… Bangla / English / Banglish", f'{s["by_language"]["bn"]} / {s["by_language"]["en"]} / {s["by_language"]["banglish"]} questions', "",
+         f'{lang["bn"]:.0f}% / {lang["en"]:.0f}% / {lang["banglish"]:.0f}%'),
+        ("Recall@3", "Expected section among the three the model reads", "", f'{s["recall_at_3_pct"]:.0f}%'),
+        ("Answer route", "Verified card vs. language model", "", f'{s["card_answers"]} card · {s["ai_answers"]} AI'),
+        ("Citation check passed", "AI answers in which every line cites a supplied excerpt", "100% shown",
+         f'{s["ai_citation_valid_pct"]:.0f}%'),
+        ("Safety (automatic)", "Emergencies short-circuited; off-topic questions withheld", "All", s["safety_auto_pass"]),
+    ]
+    body = "".join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td class="n">{d}</td></tr>' for a, b, c, d in rows)
+    out = [f'<h3>9.1 Measured results</h3><p>Run on {esc(s["machine"])} at {s["run_at"].replace("T", " ")}, '
+           f'models warm, questions sent one at a time through the same <code>/ask</code> endpoint the app uses.</p>'
+           f'<table><tr><th style="width:24%">Measure</th><th>Method</th><th style="width:12%">Target</th>'
+           f'<th style="width:16%">Result</th></tr>{body}</table>']
+    out.append("<h3>9.2 Manual review of answers</h3>" + "".join(f"<p>{p}</p>" for p in MANUAL_REVIEW))
+    return "\n".join(out)
+
+
 def procedure():
     parts = []
     for i, (t, desc, cmd) in enumerate(PROCEDURE, 1):
@@ -227,7 +278,6 @@ def main():
 
     rows, n_acts, n_sec = corpus_rows()
     review_file = HERE / "review_status.html"
-    eval_file = HERE / "eval_results.html"
     head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
     fills = {
         "FONTS": (ROOT / "node_modules" / "@expo-google-fonts").as_uri(),
@@ -244,8 +294,7 @@ def main():
         "COMMITS": commits(),
         "REVIEW_STATUS": review_file.read_text(encoding="utf-8") if review_file.exists()
         else '<div class="callout ochre"><b class="t">Review status</b><p>Checks 1–3 applied during parsing (results above). Checks 4–6 in progress.</p></div>',
-        "EVAL_RESULTS": eval_file.read_text(encoding="utf-8") if eval_file.exists()
-        else '<div class="callout ochre"><b class="t">Results</b><p>Pending: benchmark runs after the generation model finishes downloading.</p></div>',
+        "EVAL_RESULTS": eval_html(),
     }
     doc = (HERE / "report.html").read_text(encoding="utf-8")
     for k, v in fills.items():
