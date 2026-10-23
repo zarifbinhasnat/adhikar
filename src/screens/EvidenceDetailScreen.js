@@ -4,7 +4,7 @@
  * Full-detail view for a single evidence record, including video playback.
  *
  * FEATURES:
- *   - expo-av Video component for in-app playback of recorded evidence.
+ *   - expo-video player for in-app playback of recorded evidence.
  *   - Copyable integrity hash for chain-of-custody verification.
  *   - Share and delete actions.
  *   - Premium card-based layout with clear visual hierarchy.
@@ -15,7 +15,7 @@
  *   POST   /api/evidence/:id/verify → re-hash and compare with stored hash
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,7 +26,8 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { useEvent } from 'expo';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 import { useLanguage } from '../context/LanguageContext';
@@ -44,8 +45,8 @@ const INTEGRITY_RESULT = {
 export default function EvidenceDetailScreen({ route, navigation }) {
   const { strings = {} } = useLanguage();
   const [evidence, setEvidence] = useState(route?.params?.evidence || null);
-  const videoRef = useRef(null);
-  const [videoStatus, setVideoStatus] = useState({});
+  const player = useVideoPlayer(evidence?.type === 'video' ? evidence.fileUri : null);
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
   const [integrity, setIntegrity] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -131,33 +132,25 @@ export default function EvidenceDetailScreen({ route, navigation }) {
         {/* ---- Video Player Section ---- */}
         {evidence.type === 'video' && evidence.fileUri ? (
           <View style={styles.playerSection}>
-            <Video
-              ref={videoRef}
-              source={{ uri: evidence.fileUri }}
-              style={styles.videoPlayer}
-              useNativeControls
-              resizeMode={ResizeMode.CONTAIN}
-              onPlaybackStatusUpdate={(status) => setVideoStatus(status)}
-              shouldPlay={false}
-            />
+            <VideoView player={player} style={styles.videoPlayer} nativeControls contentFit="contain" />
             <View style={styles.playerControls}>
               <TouchableOpacity
                 style={styles.playBtn}
                 onPress={() => {
-                  if (videoStatus.isPlaying) {
-                    videoRef.current?.pauseAsync();
+                  if (isPlaying) {
+                    player.pause();
                   } else {
-                    videoRef.current?.playAsync();
+                    player.play();
                   }
                 }}
               >
                 <Feather
-                  name={videoStatus.isPlaying ? 'pause' : 'play'}
+                  name={isPlaying ? 'pause' : 'play'}
                   size={20}
                   color="#fff"
                 />
                 <Text style={styles.playBtnText}>
-                  {videoStatus.isPlaying ? 'Pause' : (strings.playEvidence || 'Play Evidence')}
+                  {isPlaying ? 'Pause' : (strings.playEvidence || 'Play Evidence')}
                 </Text>
               </TouchableOpacity>
             </View>
