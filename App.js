@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useFonts } from 'expo-font';
 import {
@@ -35,7 +35,7 @@ import OfflinePacksScreen from './src/screens/OfflinePacksScreen';
 import PackReaderScreen from './src/screens/PackReaderScreen';
 import AskScreen from './src/screens/AskScreen';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HEADER_OPTIONS = {
