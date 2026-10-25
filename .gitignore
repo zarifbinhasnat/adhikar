@@ -40,10 +40,6 @@ yarn-error.*
 /ios
 /android
 
-# Agent instructions — local only, not tracked
-CLAUDE.md
-AGENTS.md
-.cursorrules
 
 # Python venv
 .venv/
