@@ -1,0 +1,10 @@
+# Python packages for the Adhikar hub, the RAG pipeline and the corpus scraper.
+# Install into a virtual environment: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+numpy
+rank-bm25
+requests
+beautifulsoup4
