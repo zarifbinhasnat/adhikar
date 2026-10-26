@@ -190,7 +190,7 @@ figcaption b { color: var(--clay7); }
   <table>
     <tr><th style="width:30%">Item</th><th>Claimed in earlier documents</th><th>Observed</th></tr>
     <tr><td>Ingestion pipeline</td><td><span class="pill ok">Ready</span> "~1200 sections across 6 acts in 30 seconds"</td><td><span class="pill bad">Never ran</span> No output directory existed. The URL pattern <code>/act-detail/type/law/id/N</code> does not exist on bdlaws, and 4 of 6 act IDs were wrong (Table 6.1).</td></tr>
-    <tr><td>Backend</td><td>Supabase schema, Edge Function, Voyage embeddings, Claude API</td><td>Templates only, never deployed; all cloud-dependent. Superseded by D1.</td></tr>
+    <tr><td>Backend</td><td>Supabase schema, Edge Function, Voyage embeddings, hosted language-model API</td><td>Templates only, never deployed; all cloud-dependent. Superseded by D1.</td></tr>
     <tr><td>App</td><td>Expo SDK 54 / React Native 0.81, bilingual UI</td><td>Runs on web (verified in browser, mobile viewport). Expo reports four dependency-version mismatches (risk R6).</td></tr>
     <tr><td>Local AI tooling</td><td>—</td><td>No Ollama, no models. Homebrew, Python and Node available.</td></tr>
   </table>

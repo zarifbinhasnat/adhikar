@@ -41,7 +41,7 @@ ACT_NOTES = {
 # (id, title, status, context, options, decision, rationale, consequences)
 DECISIONS = [
     ("D1", "Run all inference locally instead of through cloud APIs", "ok",
-     "The earlier design (RAG_ARCHITECTURE.md) sent questions to the Claude API and embeddings to Voyage AI via a Supabase backend. The presentation's central claim is that people's legal questions, which can reveal an arrest, abuse or a dispute with the state, stay private.",
+     "The earlier design sent questions to a hosted language-model API and embeddings to Voyage AI via a Supabase backend. The presentation's central claim is that people's legal questions, which can reveal an arrest, abuse or a dispute with the state, stay private.",
      "(a) Cloud LLM and embeddings; (b) hybrid with a cloud fallback toggle; (c) fully local on the presenter's laptop.",
      "Option (c). No component contacts an external service at question time, and the app has no cloud mode.",
      "Only (c) makes the privacy claim literally true and demonstrable. It also removes API keys, per-query cost and dependence on venue Internet. A visible cloud toggle would undercut the message.",
@@ -97,9 +97,9 @@ DECISIONS = [
     ("D10", "Replace the earlier ingestion script", "ok",
      "The existing ingest_acts.py had never produced output.",
      "Patch the old script; write a new one.",
-     "New script scripts/ingest_bdlaws.py. The old script is left in place for history.",
+     "New script scripts/ingest_bdlaws.py. The old script and the cloud-era templates were later removed from the repository; they remain in the git history.",
      "The old script had a non-existent URL pattern, four wrong act IDs (Table 6.1) and a parser written for a different page structure, so little of it was reusable.",
-     "Earlier documents describing Phase 0 as complete are inaccurate. This report supersedes them."),
+     "Earlier documents that described the ingestion pipeline as complete were inaccurate. This report supersedes them."),
     ("D11", "Corpus scope prioritises police encounters and current law", "ok",
      "Five days allow only a focused corpus. The most likely questions concern arrest, detention, police conduct, information requests and legal aid.",
      "All acts in the earlier plan; a narrow set; a narrow set adjusted for legal changes.",
