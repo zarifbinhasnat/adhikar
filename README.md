@@ -217,6 +217,8 @@ npx expo login                         # sign in to Expo Go on the phone with th
 | Python | 3.15.0 (`requirements.lock.txt`) |
 | Node.js / npm | 26.5.0 / 11.17.0 (`package-lock.json`) |
 
+The final presentation (PPTX/PDF), the local RAG report PDF and the mobile UI kit are kept in a [private Google Drive folder](https://drive.google.com/drive/folders/1Pa-q6P4eqCE5XbrwKyu0TUEgu-SRUmVp), not in this public repository.
+
 If `ollama list` shows a different ID after pulling, the model tag was updated upstream; answers may differ slightly from the evaluation in `eval/results.json`.
 
 **Run (macOS)**
