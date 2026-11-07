@@ -200,9 +200,24 @@ npm install
 ollama pull qwen3:8b
 ollama pull bge-m3
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -r requirements.lock.txt   # exact versions; requirements.txt lists the top-level packages
 npx expo login                         # sign in to Expo Go on the phone with the same account
 ```
+
+`npm install` follows `package-lock.json`. The search index in `rag/index/` is not in Git; `start_demo.sh` rebuilds it from `corpus/` with BGE-M3 on first run (a few minutes).
+
+**Tested setup** (the demo on 2026-10-27)
+
+| Part | Version |
+|---|---|
+| Mac | MacBook Air M4, 16 GB RAM |
+| Ollama | 0.40.7, run with `OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0` (set by `start_demo.sh`) |
+| Answer model | `qwen3:8b` (ID `500a1f067a9f`, 5.2 GB) |
+| Embedding model | `bge-m3:latest` (ID `790764642607`, 1.2 GB) |
+| Python | 3.15.0 (`requirements.lock.txt`) |
+| Node.js / npm | 26.5.0 / 11.17.0 (`package-lock.json`) |
+
+If `ollama list` shows a different ID after pulling, the model tag was updated upstream; answers may differ slightly from the evaluation in `eval/results.json`.
 
 **Run (macOS)**
 
